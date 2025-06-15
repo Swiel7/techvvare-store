@@ -3,6 +3,8 @@ import { Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/sonner';
+import { SessionProvider } from 'next-auth/react';
+import { auth } from '@/auth';
 
 export const metadata: Metadata = {
   title: {
@@ -17,13 +19,17 @@ const font = Plus_Jakarta_Sans({
   subsets: ['latin'],
 });
 
-const RootLayout = ({ children }: { children: React.ReactNode }) => {
+const RootLayout = async ({ children }: { children: React.ReactNode }) => {
+  const session = await auth();
+
   return (
     <html lang="en">
-      <body className={cn('font-sans antialiased [&>section]:last-of-type:!p-0', font.variable)}>
-        {children}
-        <Toaster richColors theme="light" />
-      </body>
+      <SessionProvider session={session}>
+        <body className={cn('font-sans antialiased [&>section]:last-of-type:!p-0', font.variable)}>
+          {children}
+          <Toaster richColors theme="light" />
+        </body>
+      </SessionProvider>
     </html>
   );
 };

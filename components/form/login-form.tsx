@@ -9,6 +9,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { AuthLink } from '@/components/auth';
+import { loginWithCredentials } from '@/lib/actions/auth.actions';
+import { toast } from 'sonner';
 
 type LoginFormProps = { intercept?: boolean; onSuccess?: () => void };
 
@@ -23,7 +25,16 @@ const LoginForm = ({ intercept = false, onSuccess }: LoginFormProps) => {
   const isSubmitting = form.formState.isSubmitting;
 
   const handleSubmit = async (values: z.infer<typeof loginSchema>) => {
-    console.log(values);
+    const { success, message } = await loginWithCredentials(values);
+
+    if (success) {
+      if (onSuccess) onSuccess?.();
+      else router.replace('/');
+
+      toast.success('Success', { description: message });
+    } else {
+      toast.error('Error', { description: message });
+    }
   };
 
   return (

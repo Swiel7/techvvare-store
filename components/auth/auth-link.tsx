@@ -2,6 +2,7 @@
 import type { ComponentProps } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { redirectToUrl } from '@/lib/actions/auth.actions';
 
 type AuthLinkProps =
   | ({ intercept?: true } & ComponentProps<typeof Link>)
@@ -24,7 +25,14 @@ const AuthLink = (props: AuthLinkProps) => {
 
   return (
     <Button variant="link" size="sm" className="px-0 font-medium" asChild>
-      <a tabIndex={0} onClick={() => console.log('redirect')} {...rest} />
+      <a
+        tabIndex={0}
+        onClick={(e) => {
+          e.preventDefault();
+          redirectToUrl(href);
+        }}
+        {...rest}
+      />
     </Button>
   );
 };
