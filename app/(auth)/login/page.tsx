@@ -1,7 +1,13 @@
-import { LoginForm } from '@/components/form';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { LoginForm } from "@/components/form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
-export const metadata = { title: 'Login' };
+export const metadata = { title: "Login" };
 
 const LoginPage = () => {
   return (

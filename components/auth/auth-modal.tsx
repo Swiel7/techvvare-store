@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { LoginForm, RegisterForm } from '@/components/form';
-import { ResponsiveDialog } from '@/components/ui/responsive-dialog';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { LoginForm, RegisterForm } from "@/components/form";
+import { ResponsiveDialog } from "@/components/ui/responsive-dialog";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-const AuthModal = ({ type }: { type: 'login' | 'register' }) => {
+const AuthModal = ({ type }: { type: "login" | "register" }) => {
   const [open, setOpen] = useState<boolean>(true);
   const router = useRouter();
 
@@ -18,10 +18,15 @@ const AuthModal = ({ type }: { type: 'login' | 'register' }) => {
     <ResponsiveDialog
       open={open}
       onOpenChange={handleChange}
-      title={type === 'login' ? 'Welcome' : 'Create New Account'}
-      description={type === 'login' ? 'Please Login Here' : 'Please Enter Details'}>
-      {type === 'login' && <LoginForm intercept onSuccess={handleChange} />}
-      {type === 'register' && <RegisterForm intercept onSuccess={handleChange} />}
+      title={type === "login" ? "Welcome" : "Create New Account"}
+      description={
+        type === "login" ? "Please Login Here" : "Please Enter Details"
+      }
+    >
+      {type === "login" && <LoginForm intercept onSuccess={handleChange} />}
+      {type === "register" && (
+        <RegisterForm intercept onSuccess={handleChange} />
+      )}
     </ResponsiveDialog>
   );
 };

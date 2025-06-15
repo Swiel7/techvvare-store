@@ -1,23 +1,31 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Form, FormControl, FormControls, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { registerSchema } from '@/lib/validations';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { useRouter } from 'next/navigation';
-import { AuthLink } from '@/components/auth';
-import { register } from '@/lib/actions/auth.actions';
-import { toast } from 'sonner';
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Form,
+  FormControl,
+  FormControls,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { registerSchema } from "@/lib/validations";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { useRouter } from "next/navigation";
+import { AuthLink } from "@/components/auth";
+import { register } from "@/lib/actions/auth.actions";
+import { toast } from "sonner";
 
 const inputs: { label: string; name: string; type: string }[] = [
-  { label: 'First Name', name: 'firstName', type: 'text' },
-  { label: 'Last Name', name: 'lastName', type: 'text' },
-  { label: 'Email Address', name: 'email', type: 'email' },
-  { label: 'Password', name: 'password', type: 'password' },
+  { label: "First Name", name: "firstName", type: "text" },
+  { label: "Last Name", name: "lastName", type: "text" },
+  { label: "Email Address", name: "email", type: "email" },
+  { label: "Password", name: "password", type: "password" },
 ];
 
 type RegisterFormProps = { intercept?: boolean; onSuccess?: () => void };
@@ -27,10 +35,10 @@ const RegisterForm = ({ intercept = false, onSuccess }: RegisterFormProps) => {
 
   const form = useForm<z.infer<typeof registerSchema>>({
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
       terms: false,
     },
     resolver: zodResolver(registerSchema),
@@ -43,11 +51,11 @@ const RegisterForm = ({ intercept = false, onSuccess }: RegisterFormProps) => {
 
     if (success) {
       if (onSuccess) onSuccess?.();
-      else router.replace('/');
+      else router.replace("/");
 
-      toast.success('Success', { description: message });
+      toast.success("Success", { description: message });
     } else {
-      toast.error('Error', { description: message });
+      toast.error("Error", { description: message });
     }
   };
 
@@ -60,7 +68,9 @@ const RegisterForm = ({ intercept = false, onSuccess }: RegisterFormProps) => {
               <FormField
                 key={name}
                 control={form.control}
-                name={name as Exclude<keyof z.infer<typeof registerSchema>, 'terms'>}
+                name={
+                  name as Exclude<keyof z.infer<typeof registerSchema>, "terms">
+                }
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>{label}</FormLabel>
@@ -79,10 +89,15 @@ const RegisterForm = ({ intercept = false, onSuccess }: RegisterFormProps) => {
                 <FormItem>
                   <div className="flex items-center gap-2">
                     <FormControl>
-                      <Checkbox checked={field.value} onCheckedChange={field.onChange} disabled={isSubmitting} />
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        disabled={isSubmitting}
+                      />
                     </FormControl>
                     <FormLabel className="text-foreground text-base">
-                      I Agree The <AuthLink href="#">Terms & Conditions</AuthLink>
+                      I Agree The{" "}
+                      <AuthLink href="#">Terms & Conditions</AuthLink>
                     </FormLabel>
                   </div>
                   <FormMessage />
@@ -90,13 +105,18 @@ const RegisterForm = ({ intercept = false, onSuccess }: RegisterFormProps) => {
               )}
             />
           </FormControls>
-          <Button type="submit" size="lg" className="w-full" loading={isSubmitting}>
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full"
+            loading={isSubmitting}
+          >
             Register
           </Button>
         </form>
       </Form>
       <div className="text-foreground mt-3 text-center">
-        Already have an account?{' '}
+        Already have an account?{" "}
         <AuthLink href="/login" intercept={intercept}>
           Sign in
         </AuthLink>

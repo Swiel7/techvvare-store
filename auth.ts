@@ -1,13 +1,13 @@
-import { loginSchema } from '@/lib/validations';
-import NextAuth from 'next-auth';
-import { compare } from 'bcryptjs';
-import Credentials from 'next-auth/providers/credentials';
-import { getUserByEmail } from '@/lib/services/user.service';
-import { authRoutes, protectedRoutes } from '@/lib/routes';
-import { TAuthenticatedUser } from '@/types';
+import { loginSchema } from "@/lib/validations";
+import NextAuth from "next-auth";
+import { compare } from "bcryptjs";
+import Credentials from "next-auth/providers/credentials";
+import { getUserByEmail } from "@/lib/services/user.service";
+import { authRoutes, protectedRoutes } from "@/lib/routes";
+import { TAuthenticatedUser } from "@/types";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  pages: { signIn: '/login' },
+  pages: { signIn: "/login" },
   providers: [
     Credentials({
       authorize: async (credentials) => {
@@ -22,7 +22,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const isPasswordValid = await compare(password, userFromDb.password);
 
           if (isPasswordValid) {
-            const { id, firstName, lastName, email, role } = userFromDb as TAuthenticatedUser;
+            const { id, firstName, lastName, email, role } =
+              userFromDb as TAuthenticatedUser;
 
             return { id, firstName, lastName, email, role };
           }
@@ -33,12 +34,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
     jwt: ({ token, user, trigger, session }) => {
-      if (trigger === 'update' && session?.user) {
+      if (trigger === "update" && session?.user) {
         return { ...token, ...session.user };
       }
 
@@ -62,10 +63,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       const { nextUrl } = request;
       const isLoggedIn = !!auth?.user;
 
-      if (!isLoggedIn && protectedRoutes.some((r) => r.test(nextUrl.pathname))) return false;
+      if (!isLoggedIn && protectedRoutes.some((r) => r.test(nextUrl.pathname)))
+        return false;
 
       if (isLoggedIn && authRoutes.some((r) => r.test(nextUrl.pathname)))
-        return Response.redirect(new URL('/', nextUrl));
+        return Response.redirect(new URL("/", nextUrl));
 
       return true;
     },

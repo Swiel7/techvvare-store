@@ -1,4 +1,4 @@
-import { AuthModal } from '@/components/auth';
+import { AuthModal } from "@/components/auth";
 
 const RegisterModalPage = () => {
   return <AuthModal type="register" />;

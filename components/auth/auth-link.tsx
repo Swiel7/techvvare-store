@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { ComponentProps } from 'react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { redirectToUrl } from '@/lib/actions/auth.actions';
+import type { ComponentProps } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { redirectToUrl } from "@/lib/actions/auth.actions";
 
 type AuthLinkProps =
   | ({ intercept?: true } & ComponentProps<typeof Link>)
-  | ({ intercept: false; href: string } & ComponentProps<'a'>);
+  | ({ intercept: false; href: string } & ComponentProps<"a">);
 
 const AuthLink = (props: AuthLinkProps) => {
   const allowIntercept = props.intercept !== false;

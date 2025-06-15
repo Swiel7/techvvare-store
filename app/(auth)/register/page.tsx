@@ -1,7 +1,13 @@
-import { RegisterForm } from '@/components/form';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { RegisterForm } from "@/components/form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
-export const metadata = { title: 'Register' };
+export const metadata = { title: "Register" };
 
 const RegisterPage = () => {
   return (

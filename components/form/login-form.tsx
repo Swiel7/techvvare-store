@@ -1,16 +1,24 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormControls, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { loginSchema } from '@/lib/validations';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { useRouter } from 'next/navigation';
-import { AuthLink } from '@/components/auth';
-import { loginWithCredentials } from '@/lib/actions/auth.actions';
-import { toast } from 'sonner';
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormControls,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { loginSchema } from "@/lib/validations";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { useRouter } from "next/navigation";
+import { AuthLink } from "@/components/auth";
+import { loginWithCredentials } from "@/lib/actions/auth.actions";
+import { toast } from "sonner";
 
 type LoginFormProps = { intercept?: boolean; onSuccess?: () => void };
 
@@ -18,7 +26,7 @@ const LoginForm = ({ intercept = false, onSuccess }: LoginFormProps) => {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof loginSchema>>({
-    defaultValues: { email: '', password: '' },
+    defaultValues: { email: "", password: "" },
     resolver: zodResolver(loginSchema),
   });
 
@@ -29,11 +37,11 @@ const LoginForm = ({ intercept = false, onSuccess }: LoginFormProps) => {
 
     if (success) {
       if (onSuccess) onSuccess?.();
-      else router.replace('/');
+      else router.replace("/");
 
-      toast.success('Success', { description: message });
+      toast.success("Success", { description: message });
     } else {
-      toast.error('Error', { description: message });
+      toast.error("Error", { description: message });
     }
   };
 
@@ -69,13 +77,18 @@ const LoginForm = ({ intercept = false, onSuccess }: LoginFormProps) => {
               )}
             />
           </FormControls>
-          <Button type="submit" size="lg" className="w-full" loading={isSubmitting}>
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full"
+            loading={isSubmitting}
+          >
             Login
           </Button>
         </form>
       </Form>
       <div className="text-foreground mt-3 text-center">
-        Don&apos;t have an account?{' '}
+        Don&apos;t have an account?{" "}
         <AuthLink href="/register" intercept={intercept}>
           Sign up
         </AuthLink>
