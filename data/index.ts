@@ -132,3 +132,13 @@ export const bestDealData: {
     "Discover ultra-fast performance, stunning displays, and premium design with the latest OnePlus models.",
   image: bestDealImage,
 };
+
+export const sortOptions = [
+  { value: "default", name: "Default sorting" },
+  { value: "rating", name: "Average rating" },
+  { value: "price_asc", name: "Price: low to high" },
+  { value: "price_desc", name: "Price: high to low" },
+  { value: "latest", name: "Latest" },
+] as const;
+
+export const sortValues = sortOptions.map(({ value }) => value);

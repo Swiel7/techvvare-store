@@ -2,3 +2,8 @@ export { default as ProductCard } from "./product-card";
 export { default as ProductPrices } from "./product-prices";
 export { default as AddToCartButton } from "./add-to-cart-button";
 export { default as WishlistButton } from "./wishlist-button";
+export { default as Filters } from "./filters";
+export { default as ProductListHeader } from "./product-list-header";
+export { default as ProductList } from "./product-list";
+export { default as MobileFilters } from "./mobile-filters";
+export { default as FilterTags } from "./filter-tags";

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { bannerContent } from "@/data";
+import { bannerData } from "@/data";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,7 +9,7 @@ const Banners = () => {
     <section>
       <div className="wrapper">
         <div className="grid gap-x-4 gap-y-6 md:grid-cols-2 lg:gap-x-6">
-          {bannerContent.map(({ title, subtitle, image }, i) => (
+          {bannerData.map(({ title, subtitle, image }, i) => (
             <div
               key={i}
               className={cn(

@@ -1,3 +1,4 @@
+import { sortOptions } from "@/data";
 import { categories, orders, products, reviews, users } from "@/db/schema";
 import { InferSelectModel } from "drizzle-orm";
 import { LucideProps } from "lucide-react";
@@ -27,3 +28,29 @@ export type TActionResult<T = null> =
 export type TIcon = ForwardRefExoticComponent<
   Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
 >;
+
+export type TFilterKeys =
+  | "status"
+  | "category"
+  | "brand"
+  | "price"
+  | "color"
+  | "page"
+  | "sort"
+  | "view";
+
+export type TFilterURLSearchParams = Record<
+  TFilterKeys,
+  string | string[] | undefined
+>;
+
+export type TFilterOption = { label: string; count: number };
+export type TFilterOptionColor = { colorName: string; colorCode: string };
+export type TSortValue = (typeof sortOptions)[number]["value"];
+
+export type TAvailableFilters = {
+  category: TFilterOption[];
+  brand: TFilterOption[];
+  color: TFilterOptionColor[];
+  status: TFilterOption[];
+};

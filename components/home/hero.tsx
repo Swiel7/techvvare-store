@@ -8,7 +8,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { useRef } from "react";
-import { heroContent } from "@/data";
+import { heroData } from "@/data";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
@@ -26,7 +26,7 @@ const Hero = () => {
           onMouseLeave={() => autoplay.current.play()}
         >
           <CarouselContent>
-            {heroContent.map(({ subtitle, title, price, image }) => (
+            {heroData.map(({ subtitle, title, price, image }) => (
               <CarouselItem
                 key={image.src}
                 className="pt-8 md:h-[calc(520px_-_56px)] lg:h-[calc(700px_-_56px)]"
