@@ -14,6 +14,8 @@ export type TAuthenticatedUser = Omit<
   "password" | "addresses" | "wishlist" | "createdAt"
 >;
 
+export type TReviewWithAuthor = TReview & Pick<TUser, "firstName" | "lastName">;
+
 export type TActionResult<T = null> =
   | { success: false; message: string }
   | {

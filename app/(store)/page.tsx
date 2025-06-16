@@ -1,4 +1,13 @@
-import { Banners, Brands, Categories, Hero } from "@/components/home";
+import {
+  Banners,
+  BestDeal,
+  Brands,
+  Categories,
+  FeaturedProducts,
+  Hero,
+  OnSaleProducts,
+  Testimonials,
+} from "@/components/home";
 import Loading from "@/components/ui/loading";
 import { Suspense } from "react";
 
@@ -11,10 +20,16 @@ const HomePage = () => {
         <Categories />
       </Suspense>
       <Banners />
-      {/* <FeaturedProducts />
+      <Suspense fallback={<Loading />}>
+        <FeaturedProducts />
+      </Suspense>
       <BestDeal />
-      <OnSaleProducts />
-      <Testimonials /> */}
+      <Suspense fallback={<Loading />}>
+        <OnSaleProducts />
+      </Suspense>
+      <Suspense fallback={<Loading />}>
+        <Testimonials />
+      </Suspense>
     </>
   );
 };

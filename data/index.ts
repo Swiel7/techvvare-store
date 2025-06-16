@@ -1,8 +1,17 @@
 import { TIcon } from "@/types";
-import { Heart, Package, Tag, User2 } from "lucide-react";
+import {
+  CreditCard,
+  Headphones,
+  Heart,
+  Package,
+  RefreshCcw,
+  Tag,
+  User2,
+} from "lucide-react";
 import { StaticImageData } from "next/image";
 import { headphones, laptop, smartwatch } from "@/public/hero";
 import { banner1, banner2 } from "@/public/banners";
+import bestDealImage from "@/public/best-deal.png";
 
 export const navLinks: { label: string; href: string }[] = [
   { label: "Home", href: "/" },
@@ -43,7 +52,7 @@ export const footerLinks: {
   },
 ];
 
-export const heroContent: {
+export const heroData: {
   subtitle: string;
   title: string;
   price: string;
@@ -69,7 +78,7 @@ export const heroContent: {
   },
 ];
 
-export const bannerContent: {
+export const bannerData: {
   title: string;
   subtitle: string;
   image: StaticImageData;
@@ -85,3 +94,41 @@ export const bannerContent: {
     image: banner2,
   },
 ];
+
+export const featureData: {
+  icon: TIcon;
+  title: string;
+  description: string;
+}[] = [
+  {
+    icon: Package,
+    title: "Fast Free Shipping",
+    description: "You will love at great low prices",
+  },
+  {
+    icon: RefreshCcw,
+    title: "30 Days Returns",
+    description: "Within 15 days for an exchange",
+  },
+  {
+    icon: Headphones,
+    title: "Customer Support",
+    description: "24 hours a day, 7 days a week",
+  },
+  {
+    icon: CreditCard,
+    title: "Secure Payment",
+    description: "Pay with multiple credit cards",
+  },
+];
+
+export const bestDealData: {
+  title: string;
+  description: string;
+  image: StaticImageData;
+} = {
+  title: "Experience Speed And Innovation With OnePlus Smartphones",
+  description:
+    "Discover ultra-fast performance, stunning displays, and premium design with the latest OnePlus models.",
+  image: bestDealImage,
+};

@@ -1,4 +1,4 @@
-import { Footer, Header } from "@/components/layout";
+import { Features, Footer, Header } from "@/components/layout";
 
 const Layout = async ({
   children,
@@ -13,7 +13,7 @@ const Layout = async ({
       <main className="bg-background flex flex-1 flex-col *:nth-last-[2]:pb-8 *:nth-last-[2]:lg:pb-20">
         {children}
         {authModals}
-        {/* <Features /> */}
+        <Features />
       </main>
       <Footer />
     </div>
