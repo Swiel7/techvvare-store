@@ -1,9 +1,9 @@
+import { auth } from "@/auth";
 import { ReviewForm } from "@/components/form";
 import ReviewCard from "@/components/review/review-card";
 import { Pagination } from "@/components/ui/pagination";
 import { Progress } from "@/components/ui/progress";
 import { Rating } from "@/components/ui/rating";
-import { authenticateUser } from "@/lib/actions/auth.actions";
 import { checkUserBoughtProduct } from "@/lib/services/product.service";
 import {
   getRatingCounts,
@@ -21,18 +21,21 @@ const ProductReviews = async ({
   product: TProduct & { category: string };
   page: string;
 }) => {
-  const user = await authenticateUser();
+  const session = await auth();
+  const userId = session?.user?.id;
 
-  const [reviews, totals, ratingCounts, isUserBoughtProduct] = await cache(() =>
-    Promise.all([
-      getReviewsByProductId(product.id, page),
-      getReviewsCount(product.id),
-      getRatingCounts(product.id),
-      checkUserBoughtProduct(user.id, product.id),
-    ]),
+  const isUserBoughtProduct = userId
+    ? await cache(() => checkUserBoughtProduct(userId, product.id))()
+    : false;
+
+  const [reviews, { totalPages, totalReviews }, ratingCounts] = await cache(
+    () =>
+      Promise.all([
+        getReviewsByProductId(product.id, page),
+        getReviewsCount(product.id),
+        getRatingCounts(product.id),
+      ]),
   )();
-
-  const { totalPages, totalReviews } = totals;
 
   return (
     <div className="grid items-start gap-x-16 gap-y-8 lg:grid-cols-2">
@@ -77,7 +80,7 @@ const ProductReviews = async ({
         <ul className="divide-y">
           {reviews.map((review) => (
             <li key={review.id} className="first:*:pt-0">
-              <ReviewCard review={review} className="*:px-0" />
+              <ReviewCard review={review} className="*:!px-0" />
             </li>
           ))}
         </ul>
