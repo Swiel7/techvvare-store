@@ -1,24 +1,17 @@
+import ProductReviews from "@/components/product/product-reviews";
+import Loading from "@/components/ui/loading";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TProduct, TRatingCounts, TReviewWithAuthor } from "@/types";
-
-type ProductTabsProps = {
-  product: TProduct & { category: string };
-  reviews: TReviewWithAuthor[];
-  totalPages: number;
-  totalReviews: number;
-  ratingCounts: TRatingCounts;
-};
+import { TProduct } from "@/types";
+import { Suspense } from "react";
 
 const ProductTabs = ({
   product,
-  reviews,
-  totalPages,
-  totalReviews,
-  ratingCounts,
-}: ProductTabsProps) => {
-  console.log(product, reviews, totalPages, totalReviews, ratingCounts);
-
+  page,
+}: {
+  product: TProduct & { category: string };
+  page: string;
+}) => {
   const tableData = [
     { title: "Brand", value: product.brand },
     { title: "Model", value: product.model },
@@ -36,7 +29,9 @@ const ProductTabs = ({
       <TabsList>
         <TabsTrigger value="description">Description</TabsTrigger>
         <TabsTrigger value="specification">Specification</TabsTrigger>
-        <TabsTrigger value="reviews">Reviews ({totalReviews})</TabsTrigger>
+        <TabsTrigger value="reviews">
+          Reviews ({product.numReviews})
+        </TabsTrigger>
       </TabsList>
       <TabsContent value="description">
         <p>{product.description}</p>
@@ -53,7 +48,11 @@ const ProductTabs = ({
           </TableBody>
         </Table>
       </TabsContent>
-      <TabsContent value="reviews">reviews</TabsContent>
+      <TabsContent value="reviews">
+        <Suspense fallback={<Loading />}>
+          <ProductReviews product={product} page={page} />
+        </Suspense>
+      </TabsContent>
     </Tabs>
   );
 };

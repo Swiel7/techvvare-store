@@ -10,3 +10,4 @@ export { default as FilterTags } from "./filter-tags";
 export { default as ProductImages } from "./product-images";
 export { default as ProductDetails } from "./product-details";
 export { default as ProductTabs } from "./product-tabs";
+export { default as ProductReviews } from "./product-reviews";

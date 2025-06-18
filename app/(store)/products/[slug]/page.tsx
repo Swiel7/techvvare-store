@@ -9,9 +9,8 @@ import SectionBreadcrumb, {
   TBreadcrumbItem,
 } from "@/components/ui/section-breadcrumb";
 import { getProductBySlug } from "@/lib/services/product.service";
-import { TReviewWithAuthor } from "@/types";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import { cache, Suspense } from "react";
 
 export const generateMetadata = async (props: {
   params: Promise<{ slug: string }>;
@@ -21,6 +20,8 @@ export const generateMetadata = async (props: {
   return { title: product?.name };
 };
 
+export const revalidate = 3600;
+
 const ProductDetailsPage = async (props: {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ page: string }>;
@@ -28,7 +29,7 @@ const ProductDetailsPage = async (props: {
   const { slug } = await props.params;
   const { page } = await props.searchParams;
 
-  const product = await getProductBySlug(slug);
+  const product = await cache(() => getProductBySlug(slug))();
   if (!product) notFound();
 
   const breadcrumbItems: TBreadcrumbItem[] = [
@@ -39,11 +40,6 @@ const ProductDetailsPage = async (props: {
 
   // TODO:
   const isOnWishlist = false;
-  const reviews = [] as TReviewWithAuthor[];
-  const totalPages = 1;
-  const totalReviews = 0;
-  const ratingCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-  console.log(page);
 
   return (
     <>
@@ -55,13 +51,7 @@ const ProductDetailsPage = async (props: {
               <ProductImages product={product} />
               <ProductDetails product={product} isOnWishlist={isOnWishlist} />
             </div>
-            <ProductTabs
-              product={product}
-              reviews={reviews}
-              totalPages={totalPages}
-              totalReviews={totalReviews}
-              ratingCounts={ratingCounts}
-            />
+            <ProductTabs product={product} page={page} />
           </div>
         </div>
       </section>

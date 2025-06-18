@@ -1,3 +1,4 @@
+import { TCartItem } from "@/types";
 import { relations } from "drizzle-orm";
 import {
   pgTable,
@@ -117,7 +118,7 @@ export const orders = pgTable("orders", {
   userId: uuid("user_id")
     .references(() => users.id, { onDelete: "set null" })
     .notNull(),
-  // items: jsonb('items').$type<TOrderItem[]>().notNull(),
+  items: jsonb("items").$type<TCartItem[]>().notNull(),
   // shippingAddress: jsonb('shipping_address').$type<TShippingAddress>(),
   paymentMethod: text("payment_method"),
   status: ORDER_STATUS("status").default("Pending").notNull(),

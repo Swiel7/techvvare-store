@@ -10,6 +10,17 @@ export type TUser = InferSelectModel<typeof users>;
 export type TCategory = InferSelectModel<typeof categories>;
 export type TOrder = InferSelectModel<typeof orders>;
 
+export type TCartItem = {
+  productId: string;
+  name: string;
+  slug: string;
+  image: string;
+  variantId: string;
+  price: number;
+  quantity: number;
+  color: string;
+};
+
 export type TAuthenticatedUser = Omit<
   TUser,
   "password" | "addresses" | "wishlist" | "createdAt"

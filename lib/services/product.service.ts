@@ -1,6 +1,6 @@
 import { sortValues } from "@/data";
 import { db } from "@/db";
-import { categories, products } from "@/db/schema";
+import { categories, orders, products } from "@/db/schema";
 import { PRODUCTS_PER_PAGE } from "@/lib/constants";
 import { getFilterConditions } from "@/lib/services/filter.service";
 import {
@@ -9,7 +9,15 @@ import {
   TProduct,
   TSortValue,
 } from "@/types";
-import { asc, eq, getTableColumns, isNotNull, sql, SQL } from "drizzle-orm";
+import {
+  and,
+  asc,
+  eq,
+  getTableColumns,
+  isNotNull,
+  sql,
+  SQL,
+} from "drizzle-orm";
 
 export const getCategoriesWithImages = async (): Promise<TCategory[]> => {
   return await db.select().from(categories).where(isNotNull(categories.image));
@@ -100,4 +108,20 @@ export const getProductBySlug = async (
     .innerJoin(categories, eq(products.categoryId, categories.id));
 
   return product.length > 0 ? product[0] : null;
+};
+
+export const checkUserBoughtProduct = async (
+  userId: string,
+  productId: string,
+): Promise<boolean> => {
+  const userOrders = await db
+    .select()
+    .from(orders)
+    .where(and(eq(orders.userId, userId), eq(orders.isPaid, true)));
+
+  const isUserBoughtProduct = userOrders.some((order) =>
+    order.items.some((item) => item.productId === productId),
+  );
+
+  return isUserBoughtProduct;
 };
