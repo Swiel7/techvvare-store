@@ -7,3 +7,6 @@ export { default as ProductListHeader } from "./product-list-header";
 export { default as ProductList } from "./product-list";
 export { default as MobileFilters } from "./mobile-filters";
 export { default as FilterTags } from "./filter-tags";
+export { default as ProductImages } from "./product-images";
+export { default as ProductDetails } from "./product-details";
+export { default as ProductTabs } from "./product-tabs";

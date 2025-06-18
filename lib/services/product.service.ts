@@ -9,7 +9,7 @@ import {
   TProduct,
   TSortValue,
 } from "@/types";
-import { asc, eq, isNotNull, sql, SQL } from "drizzle-orm";
+import { asc, eq, getTableColumns, isNotNull, sql, SQL } from "drizzle-orm";
 
 export const getCategoriesWithImages = async (): Promise<TCategory[]> => {
   return await db.select().from(categories).where(isNotNull(categories.image));
@@ -88,4 +88,16 @@ export const getFilteredProducts = async (
     totalPages: Math.ceil(totalCount / PRODUCTS_PER_PAGE),
     currentPage: page,
   };
+};
+
+export const getProductBySlug = async (
+  slug: string,
+): Promise<(TProduct & { category: string }) | null> => {
+  const product = await db
+    .select({ ...getTableColumns(products), category: categories.name })
+    .from(products)
+    .where(eq(products.slug, slug))
+    .innerJoin(categories, eq(products.categoryId, categories.id));
+
+  return product.length > 0 ? product[0] : null;
 };
