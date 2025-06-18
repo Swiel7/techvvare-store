@@ -13,24 +13,16 @@ import { Suspense } from "react";
 
 const HomePage = () => {
   return (
-    <>
+    <Suspense fallback={<Loading />}>
       <Hero />
       <Brands />
-      <Suspense fallback={<Loading />}>
-        <Categories />
-      </Suspense>
+      <Categories />
       <Banners />
-      <Suspense fallback={<Loading />}>
-        <FeaturedProducts />
-      </Suspense>
+      <FeaturedProducts />
       <BestDeal />
-      <Suspense fallback={<Loading />}>
-        <OnSaleProducts />
-      </Suspense>
-      <Suspense fallback={<Loading />}>
-        <Testimonials />
-      </Suspense>
-    </>
+      <OnSaleProducts />
+      <Testimonials />
+    </Suspense>
   );
 };
 

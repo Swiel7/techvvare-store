@@ -3,7 +3,15 @@ import { Pagination } from "@/components/ui/pagination";
 import SectionBreadcrumb, {
   TBreadcrumbItem,
 } from "@/components/ui/section-breadcrumb";
-import { TAvailableFilters, TFilterURLSearchParams, TProduct } from "@/types";
+import { getFilters } from "@/lib/services/filter.service";
+import { getFilteredProducts } from "@/lib/services/product.service";
+import {
+  createSearchParams,
+  getValidatedFilterSearchParams,
+} from "@/lib/utils";
+import { TFilterURLSearchParams } from "@/types";
+import { redirect } from "next/navigation";
+import { cache } from "react";
 
 export const metadata = { title: "Products" };
 
@@ -12,15 +20,23 @@ const breadcrumbItems: TBreadcrumbItem[] = [
   { label: "Products" },
 ];
 
+export const revalidate = 3600;
+
 const ProductsPage = async (props: {
   searchParams: Promise<TFilterURLSearchParams>;
 }) => {
-  const filters = {} as TAvailableFilters;
-  const params = await props.searchParams;
-  const currentPage = 1;
-  const total = 5;
-  const products = [] as TProduct[];
-  const totalPages = 2;
+  const { params, needsRedirect } = getValidatedFilterSearchParams(
+    await props.searchParams,
+  );
+
+  if (needsRedirect) {
+    const searchParams = createSearchParams(params);
+    redirect(`?${searchParams.toString()}`);
+  }
+
+  const [filters, { products, total, totalPages, currentPage }] = await cache(
+    () => Promise.all([getFilters(params), getFilteredProducts(params)]),
+  )();
 
   return (
     <>

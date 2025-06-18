@@ -10,7 +10,12 @@ type AddToCartButtonProps = {
   quantity: number;
 } & React.ComponentProps<typeof Button>;
 
-const AddToCartButton = ({ product, ...props }: AddToCartButtonProps) => {
+const AddToCartButton = ({
+  product,
+  productVariant,
+  quantity,
+  ...props
+}: AddToCartButtonProps) => {
   const outOfStock = product.variants.every((variant) => variant.stock === 0);
 
   const handleClick = () => {

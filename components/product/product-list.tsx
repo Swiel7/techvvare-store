@@ -1,6 +1,7 @@
 import { TFilterURLSearchParams, TProduct } from "@/types";
 import { cn } from "@/lib/utils";
 import ProductCard from "@/components/product/product-card";
+import Empty from "@/components/ui/empty";
 
 const ProductList = ({
   products,
@@ -11,7 +12,7 @@ const ProductList = ({
 }) => {
   const view = searchParams.view || "grid";
 
-  return (
+  return products.length > 0 ? (
     <ul
       className={cn(
         "grid gap-4 sm:grid-cols-2 lg:gap-6",
@@ -27,6 +28,8 @@ const ProductList = ({
         </li>
       ))}
     </ul>
+  ) : (
+    <Empty>No products found. Try adjusting your filters.</Empty>
   );
 };
 

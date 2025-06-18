@@ -11,6 +11,7 @@ type WishlistButtonProps = {
 } & React.ComponentProps<typeof Button>;
 
 const WishlistButton = ({
+  productId,
   isOnWishlist,
   withText = false,
   ...props
