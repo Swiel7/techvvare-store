@@ -1,8 +1,10 @@
 import { sortOptions } from "@/data";
 import { categories, orders, products, reviews, users } from "@/db/schema";
+import { shippingAddressSchema } from "@/lib/validations";
 import { InferSelectModel } from "drizzle-orm";
 import { LucideProps } from "lucide-react";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
+import { z } from "zod";
 
 export type TProduct = InferSelectModel<typeof products>;
 export type TReview = InferSelectModel<typeof reviews>;
@@ -75,3 +77,5 @@ export type TAvailableFilters = {
   color: TFilterOptionColor[];
   status: TFilterOption[];
 };
+
+export type TShippingAddress = z.infer<typeof shippingAddressSchema>;

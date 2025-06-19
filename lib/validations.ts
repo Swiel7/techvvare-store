@@ -30,3 +30,16 @@ export const reviewSchema = z.object({
     .min(1, "Description is required")
     .max(100, "Description is too long"),
 });
+
+export const shippingAddressSchema = z.object({
+  id: z.string().uuid("Invalid address ID.").optional(),
+  name: z.string().min(1, "Full name is required.").max(150),
+  address: z.object({
+    line1: z.string().min(1, "Address line 1 is required.").max(255),
+    line2: z.string().max(255).optional().nullable(),
+    city: z.string().min(1, "City is required.").max(100),
+    state: z.string().max(100),
+    postal_code: z.string().min(1, "Postal code is required.").max(20),
+    country: z.string().min(1, "Country is required."),
+  }),
+});
