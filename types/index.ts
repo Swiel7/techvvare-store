@@ -15,10 +15,18 @@ export type TCartItem = {
   name: string;
   slug: string;
   image: string;
-  variantId: string;
+  variant: TProduct["variants"][0];
   price: number;
   quantity: number;
   color: string;
+};
+
+export type TCart = {
+  items: TCartItem[];
+  itemsCount: number;
+  itemsPrice: number;
+  shippingPrice: number;
+  totalPrice: number;
 };
 
 export type TAuthenticatedUser = Omit<

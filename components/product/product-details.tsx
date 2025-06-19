@@ -10,10 +10,12 @@ import { ExternalLink, Package, Repeat, Truck } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { MAX_QUANTITY } from "@/lib/constants";
 import ProductPrices from "@/components/product/product-prices";
 import AddToCartButton from "@/components/product/add-to-cart-button";
 import WishlistButton from "@/components/product/wishlist-button";
+import { useCart } from "@/hooks/use-cart";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const ProductDetails = ({
   product,
@@ -22,6 +24,9 @@ const ProductDetails = ({
   product: TProduct;
   isOnWishlist: boolean;
 }) => {
+  const { addItem } = useCart();
+  const router = useRouter();
+
   const {
     name,
     discountPrice,
@@ -98,8 +103,8 @@ const ProductDetails = ({
           <QuantityButton
             key={selectedVariant?.id}
             size="lg"
-            quantity={Math.min(selectedVariant?.stock, selectedQuantity)}
-            maxQuantity={Math.min(selectedVariant?.stock, MAX_QUANTITY)}
+            stockAmount={selectedVariant?.stock}
+            quantity={selectedQuantity}
             onQuantityChange={setSelectedQuantity}
           />
           <AddToCartButton
@@ -113,7 +118,16 @@ const ProductDetails = ({
           <Button
             size="lg"
             className="w-full"
-            onClick={() => console.log("add to cart")}
+            onClick={() => {
+              if (!selectedVariant) {
+                toast.error(
+                  "Please select a product variant before purchasing.",
+                );
+                return;
+              }
+              addItem(product, selectedVariant, selectedQuantity);
+              router.push("/checkout");
+            }}
           >
             Buy Now
           </Button>

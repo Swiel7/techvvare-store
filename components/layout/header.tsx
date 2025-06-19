@@ -1,8 +1,9 @@
 import { Logo, Menu, MobileNav, UserButton } from "@/components/layout";
 import { Button } from "@/components/ui/button";
-import { Heart, Search, ShoppingCart } from "lucide-react";
+import { Heart, Search } from "lucide-react";
 import Link from "next/link";
 import { auth } from "@/auth";
+import { CartDrawer } from "@/components/cart";
 
 const Header = async () => {
   const session = await auth();
@@ -32,11 +33,7 @@ const Header = async () => {
                 <Heart />
               </Link>
             </Button>
-            {/* CartDrawer */}
-            <Button variant="ghost" size="icon" className="relative size-10">
-              <ShoppingCart />
-            </Button>
-
+            <CartDrawer />
             <UserButton session={session} />
           </div>
         </div>

@@ -1,15 +1,23 @@
+"use client";
+
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { cn, formatPrice } from "@/lib/utils";
 import { Package } from "lucide-react";
 import { FREE_SHIPPING_LIMIT } from "@/lib/constants";
-import { TCartItem } from "@/types";
 import CartItem from "@/components/cart/cart-item";
+import { useCart } from "@/hooks/use-cart";
+import { ResponsiveAlertDialog } from "@/components/ui/responsive-alert-dialog";
+import { useState } from "react";
 
 const CartList = () => {
-  const items: TCartItem[] = [];
-  const itemsPrice = 200;
+  const {
+    cart: { items, itemsPrice },
+    clearCart,
+  } = useCart();
+
+  const [open, setOpen] = useState<boolean>(false);
 
   const differenceToFree =
     itemsPrice >= FREE_SHIPPING_LIMIT ? 0 : FREE_SHIPPING_LIMIT - itemsPrice;
@@ -42,7 +50,7 @@ const CartList = () => {
       </Alert>
       <ul className="space-y-4">
         {items.map((item) => (
-          <li key={item.productId} className="rounded-lg border">
+          <li key={`${item.productId}-${item.variant.id}`}>
             <CartItem item={item} />
           </li>
         ))}
@@ -51,10 +59,19 @@ const CartList = () => {
         variant="outline"
         size="sm"
         className="ml-auto"
-        onClick={() => console.log("Clear Cart")}
+        onClick={() => setOpen(true)}
       >
         Clear All
       </Button>
+      {open && (
+        <ResponsiveAlertDialog
+          open={open}
+          onOpenChange={setOpen}
+          onConfirm={clearCart}
+          title="Clear Cart Confirmation"
+          description="Are you sure you want to remove all items from your cart? This action cannot be undone."
+        />
+      )}
     </div>
   );
 };

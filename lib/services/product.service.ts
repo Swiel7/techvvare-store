@@ -53,8 +53,6 @@ export const getFilteredProducts = async (
   totalPages: number;
   currentPage: number;
 }> => {
-  // TODO: Consider caching query results for common filter combinations to improve performance
-  // TODO: Ensure database indexes are created for fields used in filtering and sorting (e.g., regularPrice, discountPrice, categoryId)
   const page = parseInt(String(searchParams.page), 10) || 1;
   const sort =
     typeof searchParams.sort === "string" &&

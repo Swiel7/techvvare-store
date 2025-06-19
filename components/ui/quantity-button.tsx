@@ -10,21 +10,26 @@ import { cn } from "@/lib/utils";
 
 type QuantityButtonProps = React.ComponentProps<"button"> &
   VariantProps<Exclude<typeof buttonVariants, "size">> & {
-    quantity?: number;
-    maxQuantity?: number;
-    onQuantityChange?: (value: number) => void;
+    stockAmount: number;
+    quantity: number;
+    onQuantityChange: (value: number) => void;
   };
 
 export const QuantityButton = ({
   className,
   variant = "outline",
-  quantity = 1,
-  maxQuantity = MAX_QUANTITY,
+  stockAmount,
+  quantity,
   onQuantityChange,
   ...props
 }: QuantityButtonProps) => {
-  const [value, setValue] = useState<number>(quantity);
-  const [inputValue, setInputValue] = useState<string>(quantity.toString());
+  const maxQuantity = Math.min(stockAmount, MAX_QUANTITY);
+  const currentQuantity = Math.min(stockAmount, quantity);
+
+  const [value, setValue] = useState<number>(currentQuantity);
+  const [inputValue, setInputValue] = useState<string>(
+    currentQuantity.toString(),
+  );
 
   const updateValue = (newValue: number) => {
     setValue(newValue);

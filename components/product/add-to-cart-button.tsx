@@ -1,8 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/hooks/use-cart";
 import { TProduct } from "@/types";
-import { toast } from "sonner";
 
 type AddToCartButtonProps = {
   product: TProduct;
@@ -16,17 +16,14 @@ const AddToCartButton = ({
   quantity,
   ...props
 }: AddToCartButtonProps) => {
+  const { addItem } = useCart();
   const outOfStock = product.variants.every((variant) => variant.stock === 0);
-
-  const handleClick = () => {
-    toast.success("Item added to cart");
-  };
 
   return (
     <Button
       variant="secondary"
       disabled={outOfStock}
-      onClick={handleClick}
+      onClick={() => addItem(product, productVariant, quantity)}
       {...props}
     >
       {outOfStock ? "Out of Stock" : "Add To Cart"}

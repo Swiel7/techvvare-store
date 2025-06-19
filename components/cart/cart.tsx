@@ -1,14 +1,18 @@
+"use client";
+
 import CartList from "@/components/cart/cart-list";
 import CartPrices from "@/components/cart/cart-prices";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import Empty from "@/components/ui/empty";
-import { Link } from "lucide-react";
+import { useCart } from "@/hooks/use-cart";
+import Link from "next/link";
 
 const Cart = () => {
-  const itemsCount: number = 1;
+  const { cart } = useCart();
 
-  if (itemsCount === 0) return <Empty>Your cart is currently empty!</Empty>;
+  if (cart.itemsCount === 0)
+    return <Empty>Your cart is currently empty!</Empty>;
 
   return (
     <div className="flex gap-x-16 gap-y-8 not-lg:flex-col">
