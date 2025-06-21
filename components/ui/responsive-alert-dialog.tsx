@@ -10,6 +10,7 @@ import {
   AlertDialogFooter,
   AlertDialogCancel,
   AlertDialogAction,
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
   Drawer,
@@ -19,8 +20,33 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
+  DrawerTrigger,
 } from "@/components/ui/drawer";
 import { useIsMobile } from "@/hooks/use-mobile";
+
+export type ResponsiveAlertDialogProps =
+  | {
+      children?: React.ReactNode;
+      title: string;
+      description: string;
+      trigger: React.ReactNode;
+      open?: boolean;
+      onOpenChange?: (isOpen: boolean) => void;
+      onConfirm: () => void | Promise<void>;
+      confirmLabel?: string;
+      cancelLabel?: string;
+    }
+  | {
+      children?: React.ReactNode;
+      title: string;
+      description: string;
+      trigger?: never;
+      open: boolean;
+      onOpenChange: (isOpen: boolean) => void;
+      onConfirm: () => void | Promise<void>;
+      confirmLabel?: string;
+      cancelLabel?: string;
+    };
 
 export function ResponsiveAlertDialog({
   children,
@@ -31,16 +57,8 @@ export function ResponsiveAlertDialog({
   onConfirm,
   confirmLabel = "Confirm",
   cancelLabel = "Cancel",
-}: {
-  children?: React.ReactNode;
-  open?: boolean;
-  onOpenChange?: (isOpen: boolean) => void;
-  title: string;
-  description: string;
-  onConfirm: () => void | Promise<void>;
-  confirmLabel?: string;
-  cancelLabel?: string;
-}) {
+  trigger,
+}: ResponsiveAlertDialogProps) {
   const [isOpen, setIsOpen] = React.useState<boolean>(!!open);
   const [isPending, startTransition] = React.useTransition();
   const isMobile = useIsMobile();
@@ -60,6 +78,7 @@ export function ResponsiveAlertDialog({
   if (!isMobile) {
     return (
       <AlertDialog open={isOpen} onOpenChange={handleChange}>
+        {trigger && <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>}
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{title}</AlertDialogTitle>
@@ -79,6 +98,7 @@ export function ResponsiveAlertDialog({
 
   return (
     <Drawer open={isOpen} onOpenChange={handleChange}>
+      {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle>{title}</DrawerTitle>

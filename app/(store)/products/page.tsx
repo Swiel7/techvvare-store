@@ -9,7 +9,7 @@ import {
   createSearchParams,
   getValidatedFilterSearchParams,
 } from "@/lib/utils";
-import { TFilterURLSearchParams } from "@/types";
+import { TFilterSearchParams } from "@/types";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 
@@ -23,7 +23,7 @@ const breadcrumbItems: TBreadcrumbItem[] = [
 export const revalidate = 3600;
 
 const ProductsPage = async (props: {
-  searchParams: Promise<TFilterURLSearchParams>;
+  searchParams: Promise<TFilterSearchParams>;
 }) => {
   const { params, needsRedirect } = getValidatedFilterSearchParams(
     await props.searchParams,
@@ -34,7 +34,7 @@ const ProductsPage = async (props: {
     redirect(`?${searchParams.toString()}`);
   }
 
-  const [filters, { products, total, totalPages, currentPage }] = await cache(
+  const [filters, { items, totalItems, totalPages, currentPage }] = await cache(
     () => Promise.all([getFilters(params), getFilteredProducts(params)]),
   )();
 
@@ -52,9 +52,9 @@ const ProductsPage = async (props: {
                 searchParams={params}
                 currentPage={currentPage}
                 filters={filters}
-                totalProducts={total}
+                totalProducts={totalItems}
               />
-              <ProductList products={products} searchParams={params} />
+              <ProductList products={items} searchParams={params} />
               {totalPages > 1 && (
                 <Pagination totalPages={totalPages} scrollToTop />
               )}

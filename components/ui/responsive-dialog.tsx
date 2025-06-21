@@ -7,6 +7,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Drawer,
@@ -16,8 +17,27 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
+  DrawerTrigger,
 } from "@/components/ui/drawer";
 import { useIsMobile } from "@/hooks/use-mobile";
+
+export type ResponsiveDialogProps =
+  | {
+      children: React.ReactNode;
+      title: string;
+      description?: string;
+      trigger: React.ReactNode;
+      open?: boolean;
+      onOpenChange?: (isOpen: boolean) => void;
+    }
+  | {
+      children: React.ReactNode;
+      title: string;
+      description?: string;
+      trigger?: never;
+      open: boolean;
+      onOpenChange: (isOpen: boolean) => void;
+    };
 
 export function ResponsiveDialog({
   children,
@@ -25,13 +45,8 @@ export function ResponsiveDialog({
   onOpenChange,
   title,
   description,
-}: {
-  children: React.ReactNode;
-  open: boolean;
-  onOpenChange: (isOpen: boolean) => void;
-  title: string;
-  description?: string;
-}) {
+  trigger,
+}: ResponsiveDialogProps) {
   const [isOpen, setIsOpen] = React.useState<boolean>(!!open);
   const isMobile = useIsMobile();
 
@@ -43,6 +58,7 @@ export function ResponsiveDialog({
   if (!isMobile) {
     return (
       <Dialog open={isOpen} onOpenChange={handleChange}>
+        {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
@@ -58,6 +74,7 @@ export function ResponsiveDialog({
 
   return (
     <Drawer open={isOpen} onOpenChange={handleChange}>
+      {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle>{title}</DrawerTitle>

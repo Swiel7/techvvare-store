@@ -12,6 +12,8 @@ export type TUser = InferSelectModel<typeof users>;
 export type TCategory = InferSelectModel<typeof categories>;
 export type TOrder = InferSelectModel<typeof orders>;
 
+export type TCategoryWithImage = TCategory & { image: string };
+
 export type TCartItem = {
   productId: string;
   name: string;
@@ -62,9 +64,17 @@ export type TFilterKeys =
   | "sort"
   | "view";
 
-export type TFilterURLSearchParams = Record<
+export type TFilterSearchParams = Record<
   TFilterKeys,
   string | string[] | undefined
+>;
+
+export type TValidatedFilterSearchParams = {
+  page: string;
+  sort: string;
+  view: string;
+} & Partial<
+  Record<Exclude<TFilterKeys, "page" | "sort" | "view">, string | string[]>
 >;
 
 export type TFilterOption = { label: string; count: number };
@@ -79,3 +89,10 @@ export type TAvailableFilters = {
 };
 
 export type TShippingAddress = z.infer<typeof shippingAddressSchema>;
+
+export type TPaginationData<T> = {
+  items: T[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+};

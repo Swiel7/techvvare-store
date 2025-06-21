@@ -1,6 +1,6 @@
+import StyledImage from "@/components/ui/styled-image";
 import { cn, formatPrice } from "@/lib/utils";
 import { TCartItem } from "@/types";
-import Image from "next/image";
 
 const OrderItem = ({
   item,
@@ -13,17 +13,12 @@ const OrderItem = ({
 
   return (
     <div className={cn("flex gap-4 rounded-lg border p-4", className)}>
-      <div className="grid aspect-square size-20 shrink-0 place-items-center rounded-lg border">
-        <div className="relative size-[80%]">
-          <Image
-            src={`${process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!}${image}`}
-            alt={name}
-            fill
-            className="object-contain"
-            sizes="64px"
-          />
-        </div>
-      </div>
+      <StyledImage
+        src={image}
+        alt={name}
+        wrapperClassName="size-20 shrink-0 rounded-lg border"
+        sizes="80px"
+      />
       <div className="flex grow flex-wrap justify-between gap-x-5 gap-y-1">
         <div className="flex flex-col justify-center gap-y-1">
           <h3 className="text-sm font-bold">{name}</h3>

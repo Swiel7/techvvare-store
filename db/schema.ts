@@ -1,4 +1,4 @@
-import { TCartItem } from "@/types";
+import { TCartItem, TShippingAddress } from "@/types";
 import { relations } from "drizzle-orm";
 import {
   pgTable,
@@ -26,7 +26,7 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
   role: USER_ROLE("role").default("CUSTOMER").notNull(),
-  // addresses: jsonb('addresses').$type<TShippingAddress[]>(),
+  addresses: jsonb("addresses").$type<TShippingAddress[]>(),
   wishlist: text("wishlist").array(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").$onUpdateFn(() => new Date()),
@@ -119,7 +119,7 @@ export const orders = pgTable("orders", {
     .references(() => users.id, { onDelete: "set null" })
     .notNull(),
   items: jsonb("items").$type<TCartItem[]>().notNull(),
-  // shippingAddress: jsonb('shipping_address').$type<TShippingAddress>(),
+  shippingAddress: jsonb("shipping_address").$type<TShippingAddress>(),
   paymentMethod: text("payment_method"),
   status: ORDER_STATUS("status").default("Pending").notNull(),
   itemsPrice: integer("items_price").notNull(),

@@ -3,11 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardHeader } from "@/components/ui/card";
 import { QuantityButton } from "@/components/ui/quantity-button";
+import StyledImage from "@/components/ui/styled-image";
 import { useCart } from "@/hooks/use-cart";
 import { cn, formatPrice } from "@/lib/utils";
 import { TCartItem } from "@/types";
 import { XIcon } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -33,20 +33,13 @@ const CartItem = ({
     <Card className={cn("!py-4", className)}>
       <CardHeader className="gap-y-0 !px-4">
         <div className="flex gap-4">
-          <div
-            className="grid aspect-square w-5/12 max-w-40 shrink-0 place-items-center rounded-lg border"
+          <Link
+            href={`/products/${slug}`}
+            className="w-5/12 max-w-40 shrink-0 rounded-lg border"
             data-slot="cart-item-image-container"
           >
-            <Link href={`/products/${slug}`} className="relative size-[80%]">
-              <Image
-                src={`${process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!}${image}`}
-                alt={name}
-                fill
-                className="object-contain"
-                sizes="160px"
-              />
-            </Link>
-          </div>
+            <StyledImage src={image} alt={name} sizes="160px" />
+          </Link>
           <div
             className="flex flex-col items-start gap-1.5"
             data-slot="cart-item-data"

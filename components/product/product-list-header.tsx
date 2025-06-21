@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { PRODUCTS_PER_PAGE } from "@/lib/constants";
-import { TAvailableFilters, TFilterURLSearchParams } from "@/types";
+import { TAvailableFilters, TValidatedFilterSearchParams } from "@/types";
 import { LayoutGrid, LayoutList } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
@@ -18,7 +18,7 @@ import MobileFilters from "@/components/product/mobile-filters";
 import FilterTags from "@/components/product/filter-tags";
 
 type ProductListHeaderProps = {
-  searchParams: TFilterURLSearchParams;
+  searchParams: TValidatedFilterSearchParams;
   totalProducts: number;
   currentPage: number;
   filters: TAvailableFilters;

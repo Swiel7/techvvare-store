@@ -1,13 +1,12 @@
-import { sortValues } from "@/data";
 import { db } from "@/db";
 import { categories, orders, products } from "@/db/schema";
 import { PRODUCTS_PER_PAGE } from "@/lib/constants";
 import { getFilterConditions } from "@/lib/services/filter.service";
 import {
-  TCategory,
-  TFilterURLSearchParams,
+  TCategoryWithImage,
+  TPaginationData,
   TProduct,
-  TSortValue,
+  TValidatedFilterSearchParams,
 } from "@/types";
 import {
   and,
@@ -18,82 +17,73 @@ import {
   sql,
   SQL,
 } from "drizzle-orm";
+import { calculatePagination, getSortOption, getTotalCount } from "@/lib/utils";
 
-export const getCategoriesWithImages = async (): Promise<TCategory[]> => {
-  return await db.select().from(categories).where(isNotNull(categories.image));
+export const getCategoriesWithImages = async (): Promise<
+  TCategoryWithImage[]
+> => {
+  return (await db
+    .select()
+    .from(categories)
+    .where(isNotNull(categories.image))) as TCategoryWithImage[];
+};
+
+export const getProductsByCondition = async (options: {
+  condition: SQL<unknown>;
+  limit?: number;
+  offset?: number;
+  orderBy?: SQL;
+}): Promise<TProduct[]> => {
+  const { condition, limit, offset, orderBy } = options;
+  const query = db.select().from(products).where(condition);
+
+  if (orderBy) query.orderBy(orderBy);
+  if (offset) query.offset(offset);
+  if (limit && limit > 0) query.limit(limit);
+
+  return await query;
 };
 
 export const getFeaturedProducts = async (limit = 4): Promise<TProduct[]> => {
-  if (limit <= 0) return [];
-
-  return await db
-    .select()
-    .from(products)
-    .where(eq(products.isFeatured, true))
-    .orderBy(asc(products.name))
-    .limit(limit);
+  return await getProductsByCondition({
+    condition: eq(products.isFeatured, true),
+    limit,
+    orderBy: asc(products.name),
+  });
 };
 
 export const getOnSaleProducts = async (limit = 4): Promise<TProduct[]> => {
-  if (limit <= 0) return [];
-
-  return await db
-    .select()
-    .from(products)
-    .where(eq(products.onSale, true))
-    .orderBy(asc(products.name))
-    .limit(limit);
+  return await getProductsByCondition({
+    condition: eq(products.onSale, true),
+    limit,
+    orderBy: asc(products.name),
+  });
 };
 
 export const getFilteredProducts = async (
-  searchParams: TFilterURLSearchParams,
-): Promise<{
-  products: TProduct[];
-  total: number;
-  totalPages: number;
-  currentPage: number;
-}> => {
-  const page = parseInt(String(searchParams.page), 10) || 1;
-  const sort =
-    typeof searchParams.sort === "string" &&
-    sortValues.includes(searchParams.sort as TSortValue)
-      ? searchParams.sort
-      : "default";
-
+  searchParams: TValidatedFilterSearchParams,
+): Promise<TPaginationData<TProduct>> => {
+  const sort = searchParams.sort || "default";
   const conditions = await getFilterConditions(searchParams);
-  const offset = (page - 1) * PRODUCTS_PER_PAGE;
+  const sortOption = getSortOption(sort);
 
-  const sortOptions: Record<TSortValue, SQL> = {
-    default: sql`name ASC`,
-    rating: sql`rating DESC`,
-    price_asc: sql`COALESCE(discountPrice, regularPrice) ASC`,
-    price_desc: sql`COALESCE(discountPrice, regularPrice) DESC`,
-    latest: sql`createdAt DESC`,
-  };
+  const { currentPage, offset } = calculatePagination(
+    searchParams.page,
+    PRODUCTS_PER_PAGE,
+  );
 
-  const [items, total] = await Promise.all([
-    db
-      .select()
-      .from(products)
-      .where(conditions)
-      .orderBy(sortOptions[sort as TSortValue])
-      .offset(offset)
-      .limit(PRODUCTS_PER_PAGE),
-
-    db
-      .select({ count: sql<number>`COUNT(*)` })
-      .from(products)
-      .where(conditions),
+  const [items, totalItems] = await Promise.all([
+    getProductsByCondition({
+      condition: conditions || sql`true`,
+      limit: PRODUCTS_PER_PAGE,
+      offset,
+      orderBy: sortOption,
+    }),
+    getTotalCount(products, conditions),
   ]);
 
-  const totalCount = total[0]?.count ?? 0;
-
-  return {
-    products: items,
-    total: totalCount,
-    totalPages: Math.ceil(totalCount / PRODUCTS_PER_PAGE),
-    currentPage: page,
-  };
+  const totalPages = Math.ceil(totalItems / PRODUCTS_PER_PAGE);
+  return { items, totalItems, totalPages, currentPage };
 };
 
 export const getProductBySlug = async (

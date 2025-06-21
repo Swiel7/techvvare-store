@@ -1,13 +1,13 @@
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { TProduct } from "@/types";
-import Image from "next/image";
 import Link from "next/link";
 import { Rating } from "@/components/ui/rating";
 import { Card, CardContent } from "@/components/ui/card";
 import WishlistButton from "@/components/product/wishlist-button";
 import ProductPrices from "@/components/product/product-prices";
 import AddToCartButton from "@/components/product/add-to-cart-button";
+import StyledImage from "@/components/ui/styled-image";
 
 const ProductCard = ({
   product,
@@ -27,21 +27,16 @@ const ProductCard = ({
     >
       <div
         className={cn(
-          "bg-muted relative grid aspect-square",
+          "bg-muted relative",
           variant === "horizontal"
             ? "w-1/3 min-w-32 shrink-0 rounded-l-lg"
             : "rounded-t-lg",
         )}
       >
-        <Link
-          href={`/products/${product.slug}`}
-          className="relative m-auto size-[80%]"
-        >
-          <Image
-            src={`${process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!}${product.images[0]}`}
+        <Link href={`/products/${product.slug}`}>
+          <StyledImage
+            src={product.images[0]}
             alt={product.name}
-            fill
-            className="object-contain"
             sizes="(max-width: 500px) 100vw, (max-width: 740px) 50vw, (max-width: 990px) 33vw, 25vw"
           />
         </Link>

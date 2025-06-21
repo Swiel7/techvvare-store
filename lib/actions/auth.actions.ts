@@ -13,6 +13,7 @@ import { redirect } from "next/navigation";
 import { TActionResult, TAuthenticatedUser } from "@/types";
 import { getUserByEmail } from "@/lib/services/user.service";
 import { z } from "zod";
+import { handleErrorResponse } from "@/lib/utils";
 
 export const redirectToUrl = async (
   url: string,
@@ -48,15 +49,14 @@ export const loginWithCredentials = async (
 
     return { success: true, message: "Signed in successfully!" };
   } catch (error) {
-    console.error(error);
     if (isRedirectError(error)) throw error;
 
-    const message =
+    return handleErrorResponse(
+      error,
       error instanceof CredentialsSignin
         ? "Invalid email or password!"
-        : "An unexpected error occurred!";
-
-    return { success: false, message };
+        : "An unexpected error occurred!",
+    );
   }
 };
 
@@ -111,10 +111,9 @@ export const register = async (
       message: "Account created and signed in successfully!",
     };
   } catch (error) {
-    console.error(error);
     if (isRedirectError(error)) throw error;
 
-    return { success: false, message: "An unexpected error occurred!" };
+    return handleErrorResponse(error, "An unexpected error occurred!");
   }
 };
 

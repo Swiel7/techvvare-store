@@ -1,9 +1,9 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import StyledImage from "@/components/ui/styled-image";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { TProduct } from "@/types";
-import Image from "next/image";
 import { useState } from "react";
 
 const ProductImages = ({ product }: { product: TProduct }) => {
@@ -13,16 +13,12 @@ const ProductImages = ({ product }: { product: TProduct }) => {
 
   return (
     <div className="space-y-4">
-      <div className="relative grid aspect-square rounded-lg border">
-        <div className="relative m-auto size-[80%]">
-          <Image
-            src={`${process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!}${selectedImage}`}
-            alt={product.name}
-            fill
-            className="object-contain"
-            sizes="(max-width: 1024px) 100vw, 50vw"
-          />
-        </div>
+      <div className="relative rounded-lg border">
+        <StyledImage
+          src={selectedImage}
+          alt={product.name}
+          sizes="(max-width: 1024px) 100vw, 50vw"
+        />
         {discountPrice && (
           <Badge className="absolute top-[5%] left-[5%]">
             -{Math.round(((regularPrice - discountPrice) * 100) / regularPrice)}
@@ -43,15 +39,12 @@ const ProductImages = ({ product }: { product: TProduct }) => {
             value={image}
             className="!bg-background data-[state=on]:border-primary aspect-square size-full rounded-lg !border"
           >
-            <div className="relative m-auto size-[80%]">
-              <Image
-                src={`${process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!}${image}`}
-                alt={product.name}
-                fill
-                className="object-contain"
-                sizes="33vw"
-              />
-            </div>
+            <StyledImage
+              src={image}
+              alt={product.name}
+              wrapperClassName="size-full"
+              sizes="33vw"
+            />
           </ToggleGroupItem>
         ))}
       </ToggleGroup>

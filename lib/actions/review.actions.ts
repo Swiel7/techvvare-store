@@ -4,12 +4,44 @@ import { db } from "@/db";
 import { products, reviews } from "@/db/schema";
 import { authenticateUser } from "@/lib/actions/auth.actions";
 import { checkUserBoughtProduct } from "@/lib/services/product.service";
+import { handleErrorResponse } from "@/lib/utils";
 import { reviewSchema } from "@/lib/validations";
-import { TActionResult, TReview } from "@/types";
+import { TActionResult, TProduct, TReview } from "@/types";
 import { eq, avg, sql, count } from "drizzle-orm";
-import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+
+const updateProductRatingAndNumReviews = async (
+  productId: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  tx: any,
+): Promise<TProduct> => {
+  const rating = db.$with("rating").as(
+    db
+      .select({ value: avg(reviews.rating).as("value") })
+      .from(reviews)
+      .where(eq(reviews.productId, productId)),
+  );
+
+  const numReviews = db.$with("num_reviews").as(
+    db
+      .select({ value: count().as("value") })
+      .from(reviews)
+      .where(eq(reviews.productId, productId)),
+  );
+
+  const [product] = await tx
+    .with(rating, numReviews)
+    .update(products)
+    .set({
+      rating: sql`(select * from ${rating})`,
+      numReviews: sql`(select * from ${numReviews})`,
+    })
+    .where(eq(products.id, productId))
+    .returning();
+
+  return product as TProduct;
+};
 
 export const createReview = async (
   values: z.infer<typeof reviewSchema>,
@@ -48,28 +80,7 @@ export const createReview = async (
         .values({ ...validationResult.data, productId, userId: user.id })
         .returning();
 
-      const rating = db.$with("rating").as(
-        db
-          .select({ value: avg(reviews.rating).as("value") })
-          .from(reviews)
-          .where(eq(reviews.productId, productId)),
-      );
-
-      const numReviews = db.$with("num_reviews").as(
-        db
-          .select({ value: count().as("value") })
-          .from(reviews)
-          .where(eq(reviews.productId, productId)),
-      );
-
-      await tx
-        .with(rating, numReviews)
-        .update(products)
-        .set({
-          rating: sql`(select * from ${rating})`,
-          numReviews: sql`(select * from ${numReviews})`,
-        })
-        .where(eq(products.id, productId));
+      await updateProductRatingAndNumReviews(productId, tx);
 
       return review;
     });
@@ -82,14 +93,7 @@ export const createReview = async (
       data: newReview,
     };
   } catch (error) {
-    console.error(error);
-
-    const message =
-      error instanceof AuthError
-        ? error.message
-        : "An unexpected error occurred!";
-
-    return { success: false, message };
+    return handleErrorResponse(error, "An unexpected error occurred!");
   }
 };
 
@@ -118,42 +122,16 @@ export const deleteReview = async (
     await db.transaction(async (tx) => {
       await tx.delete(reviews).where(eq(reviews.id, reviewId));
 
-      const rating = db.$with("rating").as(
-        db
-          .select({ value: avg(reviews.rating).as("value") })
-          .from(reviews)
-          .where(eq(reviews.productId, reviewToDelete.productId)),
+      const product = await updateProductRatingAndNumReviews(
+        reviewToDelete.productId,
+        tx,
       );
-
-      const numReviews = db.$with("num_reviews").as(
-        db
-          .select({ value: count().as("value") })
-          .from(reviews)
-          .where(eq(reviews.productId, reviewToDelete.productId)),
-      );
-
-      const [product] = await tx
-        .with(rating, numReviews)
-        .update(products)
-        .set({
-          rating: sql`(select * from ${rating})`,
-          numReviews: sql`(select * from ${numReviews})`,
-        })
-        .where(eq(products.id, reviewToDelete.productId))
-        .returning();
 
       revalidatePath(`/products/${product.slug}`);
     });
 
     return { success: true, message: "Review deleted successfully!" };
   } catch (error) {
-    console.error(error);
-
-    const message =
-      error instanceof AuthError
-        ? error.message
-        : "An unexpected error occurred!";
-
-    return { success: false, message };
+    return handleErrorResponse(error, "An unexpected error occurred!");
   }
 };

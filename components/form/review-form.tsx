@@ -53,65 +53,65 @@ const ReviewForm = ({
     form.reset();
   };
 
-  return isUserBoughtProduct ? (
-    <>
-      <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
-        Write A Review
-      </Button>
-      {open && (
-        <ResponsiveDialog
-          title="Write A Review"
-          open={open}
-          onOpenChange={onOpenChange}
-        >
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)}>
-              <FormControls>
-                <FormField
-                  control={form.control}
-                  name="rating"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Your Rating</FormLabel>
-                      <FormControl>
-                        <Rating disabled={isSubmitting} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Your Review</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          className="resize-none"
-                          disabled={isSubmitting}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </FormControls>
-              <Button
-                type="submit"
-                size="lg"
-                className="w-full"
-                loading={isSubmitting}
-              >
-                Submit
-              </Button>
-            </form>
-          </Form>
-        </ResponsiveDialog>
-      )}
-    </>
-  ) : null;
+  return (
+    <ResponsiveDialog
+      title="Write A Review"
+      open={open}
+      onOpenChange={onOpenChange}
+      trigger={
+        isUserBoughtProduct && (
+          <Button variant="outline" size="sm">
+            Write A Review
+          </Button>
+        )
+      }
+    >
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
+          <FormControls>
+            <FormField
+              control={form.control}
+              name="rating"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Your Rating</FormLabel>
+                  <FormControl>
+                    <Rating disabled={isSubmitting} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Your Review</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      className="resize-none"
+                      disabled={isSubmitting}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </FormControls>
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full"
+            loading={isSubmitting}
+          >
+            Submit
+          </Button>
+        </form>
+      </Form>
+    </ResponsiveDialog>
+  );
 };
 
 export default ReviewForm;

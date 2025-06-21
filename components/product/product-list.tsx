@@ -1,4 +1,4 @@
-import { TFilterURLSearchParams, TProduct } from "@/types";
+import { TValidatedFilterSearchParams, TProduct } from "@/types";
 import { cn } from "@/lib/utils";
 import ProductCard from "@/components/product/product-card";
 import Empty from "@/components/ui/empty";
@@ -8,7 +8,7 @@ const ProductList = ({
   searchParams,
 }: {
   products: TProduct[];
-  searchParams: TFilterURLSearchParams;
+  searchParams: TValidatedFilterSearchParams;
 }) => {
   const view = searchParams.view || "grid";
 
