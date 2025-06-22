@@ -6,11 +6,11 @@ import { ContactOption } from "@stripe/stripe-js";
 import { CheckoutSummary } from "@/components/checkout";
 
 const CheckoutForm = ({
-  shippingAddress,
+  shippingAddresses,
 }: {
-  shippingAddress: TShippingAddress[];
+  shippingAddresses: TShippingAddress[];
 }) => {
-  const contacts = shippingAddress.map(
+  const contacts = shippingAddresses.map(
     ({ address, name }) => ({ address, name }) as ContactOption,
   );
 

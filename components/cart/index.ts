@@ -3,3 +3,4 @@ export { default as CartList } from "./cart-list";
 export { default as CartItem } from "./cart-item";
 export { default as CartPrices } from "./cart-prices";
 export { default as CartDrawer } from "./cart-drawer";
+export { default as ClearCart } from "./clear-cart";

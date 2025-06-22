@@ -31,9 +31,9 @@ const appearance = {
 } as Appearance;
 
 const Checkout = ({
-  shippingAddress,
+  shippingAddresses,
 }: {
-  shippingAddress: TShippingAddress[];
+  shippingAddresses: TShippingAddress[];
 }) => {
   const { cart } = useCart();
 
@@ -48,7 +48,7 @@ const Checkout = ({
         elementsOptions: { appearance },
       }}
     >
-      <CheckoutForm shippingAddress={shippingAddress} />
+      <CheckoutForm shippingAddresses={shippingAddresses} />
     </CheckoutProvider>
   );
 };
