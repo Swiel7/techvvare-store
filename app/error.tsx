@@ -5,27 +5,37 @@ import { ERROR_REDIRECTS } from "@/lib/errorRedirects";
 import Link from "next/link";
 
 const ErrorPage = ({ error, reset }: { error: Error; reset: () => void }) => {
-  const defaultErrorData = {
-    title: "Error",
-    mainMessage:
-      "An unexpected technical error occurred. We are sorry for the inconvenience.",
-    secondaryMessage:
-      "If the problem persists, please contact support for assistance.",
-    primaryButtonText: "Try Again",
-    primaryButtonHref: "/",
-    secondaryButtonText: "",
-    secondaryButtonHref: "",
-  };
+  console.error("Error details:", error);
 
   const errorData =
     error.message in ERROR_REDIRECTS
-      ? { ...defaultErrorData, ...ERROR_REDIRECTS[error.message] }
+      ? { ...ERROR_REDIRECTS[error.message] }
       : {
-          ...defaultErrorData,
-          mainMessage: error.message || defaultErrorData.mainMessage,
+          ...ERROR_REDIRECTS["default"],
+          ...(error.message && { mainMessage: error.message }),
         };
 
-  console.error("Error details:", error);
+  const renderButton = (
+    text: string | undefined,
+    href: string | undefined,
+    variant: "outline" | "default",
+  ) => {
+    if (!text || !href) return null;
+
+    if (text === "Try Again") {
+      return (
+        <Button variant={variant} onClick={reset} size="lg" className="flex-1">
+          {text}
+        </Button>
+      );
+    }
+
+    return (
+      <Button variant={variant} asChild size="lg" className="flex-1">
+        <Link href={href}>{text}</Link>
+      </Button>
+    );
+  };
 
   return (
     <section className="flex min-h-screen items-center justify-center">
@@ -41,29 +51,15 @@ const ErrorPage = ({ error, reset }: { error: Error; reset: () => void }) => {
             <p className="text-sm">{errorData.secondaryMessage}</p>
           </div>
           <div className="flex flex-wrap gap-4">
-            {errorData.primaryButtonHref === "/" &&
-            errorData.primaryButtonText === "Try Again" ? (
-              <Button
-                variant="outline"
-                onClick={reset}
-                size="lg"
-                className="flex-1"
-              >
-                {errorData.primaryButtonText}
-              </Button>
-            ) : (
-              <Button variant="outline" asChild size="lg" className="flex-1">
-                <Link href={errorData.primaryButtonHref}>
-                  {errorData.primaryButtonText}
-                </Link>
-              </Button>
+            {renderButton(
+              errorData.secondaryButtonText,
+              errorData.secondaryButtonHref,
+              "outline",
             )}
-            {errorData.secondaryButtonText && errorData.secondaryButtonHref && (
-              <Button asChild size="lg" className="flex-1">
-                <Link href={errorData.secondaryButtonHref}>
-                  {errorData.secondaryButtonText}
-                </Link>
-              </Button>
+            {renderButton(
+              errorData.primaryButtonText,
+              errorData.primaryButtonHref,
+              "default",
             )}
           </div>
         </div>

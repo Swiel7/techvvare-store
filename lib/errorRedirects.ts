@@ -3,13 +3,25 @@ export type TErrorRedirectData = {
   title: string;
   mainMessage: string;
   secondaryMessage: string;
-  primaryButtonText: string;
-  primaryButtonHref: string;
+  primaryButtonText?: string;
+  primaryButtonHref?: string;
   secondaryButtonText?: string;
   secondaryButtonHref?: string;
 };
 
 export const ERROR_REDIRECTS: Record<string, TErrorRedirectData> = {
+  default: {
+    type: "default",
+    title: "Error",
+    mainMessage:
+      "An unexpected technical error occurred. We are sorry for the inconvenience.",
+    secondaryMessage:
+      "If the problem persists, please contact support for assistance.",
+    primaryButtonText: "Try Again",
+    primaryButtonHref: "/",
+    secondaryButtonText: "",
+    secondaryButtonHref: "",
+  },
   noSessionId: {
     type: "noSessionId",
     title: "Session Error",

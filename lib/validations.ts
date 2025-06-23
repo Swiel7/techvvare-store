@@ -43,3 +43,22 @@ export const shippingAddressSchema = z.object({
     country: z.string().min(1, "Country is required."),
   }),
 });
+
+export const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, "Current password is required."),
+    newPassword: z.string().min(8, "Password must be at least 8 characters"),
+    confirmNewPassword: z
+      .string()
+      .min(8, "Confirm password must be at least 8 characters"),
+  })
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
+    message: "New passwords don't match",
+    path: ["confirmNewPassword"],
+  });
+
+export const updateProfileSchema = z.object({
+  firstName: z.string().min(3, "First name must be at least 3 characters"),
+  lastName: z.string().min(3, "Last name must be at least 3 characters"),
+  email: z.string().email().min(3, "Email must be at least 3 characters"),
+});
