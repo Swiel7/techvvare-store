@@ -12,10 +12,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { updateProfile } from "@/lib/actions/user.actions";
 import { updateProfileSchema } from "@/lib/validations";
 import { TUser } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const inputs: { label: string; name: string; type: string }[] = [
@@ -27,6 +31,9 @@ const inputs: { label: string; name: string; type: string }[] = [
 const UpdateProfileForm = ({ user }: { user: TUser }) => {
   const { firstName, lastName, email } = user;
 
+  const { data: session, update } = useSession();
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     defaultValues: { firstName, lastName, email },
     resolver: zodResolver(updateProfileSchema),
@@ -35,7 +42,18 @@ const UpdateProfileForm = ({ user }: { user: TUser }) => {
   const isSubmitting = form.formState.isSubmitting;
 
   const handleSubmit = async (values: z.infer<typeof updateProfileSchema>) => {
-    console.log(values);
+    const result = await updateProfile(values);
+
+    if (result.success) {
+      if (session?.user) {
+        await update({ ...session, user: { ...session.user, ...result.data } });
+      }
+
+      router.refresh();
+      toast.success("Success", { description: result.message });
+    } else {
+      toast.error("Error", { description: result.message });
+    }
   };
 
   return (

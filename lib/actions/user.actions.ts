@@ -2,14 +2,20 @@
 
 import { db } from "@/db";
 import { users } from "@/db/schema";
-import { getUserById } from "@/lib/services/user.service";
+import { authenticateUser } from "@/lib/actions/auth.actions";
+import { getUserByEmail, getUserById } from "@/lib/services/user.service";
 import {
   checkShippingAddressesEqual,
   generateUniqueId,
   handleErrorResponse,
 } from "@/lib/utils";
-import { shippingAddressSchema } from "@/lib/validations";
+import {
+  changePasswordSchema,
+  shippingAddressSchema,
+  updateProfileSchema,
+} from "@/lib/validations";
 import { TActionResult, TShippingAddress, TUser } from "@/types";
+import { compare, hash } from "bcryptjs";
 import { eq, InferInsertModel } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -79,5 +85,107 @@ export const createShippingAddress = async (
     return { success: true, message: "Shipping address added successfully!" };
   } catch (error) {
     return handleErrorResponse(error, "Failed to add shipping address!");
+  }
+};
+
+export const updateProfile = async (
+  values: z.infer<typeof updateProfileSchema>,
+): Promise<TActionResult<Pick<TUser, "firstName" | "lastName" | "email">>> => {
+  try {
+    const user = await authenticateUser();
+
+    const validationResult = updateProfileSchema.safeParse(values);
+
+    if (!validationResult.success) {
+      return { success: false, message: "Invalid profile data!" };
+    }
+
+    const currentUser = await getUserById(user.id);
+
+    if (!currentUser) return { success: false, message: "User not found!" };
+
+    if (
+      currentUser.firstName === validationResult.data.firstName &&
+      currentUser.lastName === validationResult.data.lastName &&
+      currentUser.email === validationResult.data.email
+    ) {
+      return {
+        success: true,
+        message: "Profile updated successfully!",
+        data: validationResult.data,
+      };
+    }
+
+    if (currentUser.email !== validationResult.data.email) {
+      const emailOwner = await getUserByEmail(validationResult.data.email);
+
+      if (emailOwner && emailOwner.id !== currentUser.id) {
+        return {
+          success: false,
+          message: "This email address is already in use!",
+        };
+      }
+    }
+
+    const [updatedUser] = await db
+      .update(users)
+      .set(validationResult.data)
+      .where(eq(users.id, currentUser.id))
+      .returning({
+        firstName: users.firstName,
+        lastName: users.lastName,
+        email: users.email,
+      });
+
+    revalidatePath("/account");
+
+    return {
+      success: true,
+      message: "Profile updated successfully!",
+      data: updatedUser,
+    };
+  } catch (error) {
+    return handleErrorResponse(error, "Failed to update user profile!");
+  }
+};
+
+export const changePassword = async (
+  values: z.infer<typeof changePasswordSchema>,
+): Promise<TActionResult<null>> => {
+  try {
+    const user = await authenticateUser();
+
+    const validationResult = changePasswordSchema.safeParse(values);
+
+    if (!validationResult.success) {
+      return { success: false, message: "Invalid password data!" };
+    }
+
+    const { currentPassword, newPassword } = validationResult.data;
+
+    const currentUser = await getUserById(user.id);
+
+    if (!currentUser) return { success: false, message: "User not found!" };
+
+    const isCurrentPasswordValid = await compare(
+      currentPassword,
+      currentUser.password,
+    );
+
+    if (!isCurrentPasswordValid)
+      return { success: false, message: "Incorrect current password!" };
+
+    const hashedPassword = await hash(newPassword, 10);
+
+    await db
+      .update(users)
+      .set({ password: hashedPassword })
+      .where(eq(users.id, currentUser.id));
+
+    revalidatePath("/account");
+
+    return { success: true, message: "Password changed successfully!" };
+  } catch (error) {
+    return handleErrorResponse(error, "Failed to change user password!");
   }
 };

@@ -1,10 +1,19 @@
+import { auth } from "@/auth";
 import { ChangePasswordForm, UpdateProfileForm } from "@/components/form";
-import { TUser } from "@/types";
+import { getUserById } from "@/lib/services/user.service";
+import { redirect } from "next/navigation";
 
 export const metadata = { title: "Account" };
 
-const AccountPage = () => {
-  const user = {} as TUser;
+const AccountPage = async () => {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!userId) redirect("/login");
+
+  const user = await getUserById(userId);
+
+  if (!user) throw new Error("userFetchError");
 
   return (
     <section>

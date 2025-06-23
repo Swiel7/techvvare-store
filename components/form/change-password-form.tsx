@@ -12,9 +12,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { changePassword } from "@/lib/actions/user.actions";
 import { changePasswordSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const inputs: { label: string; name: string }[] = [
@@ -36,7 +38,13 @@ const ChangePasswordForm = () => {
   const isSubmitting = form.formState.isSubmitting;
 
   const handleSubmit = async (values: z.infer<typeof changePasswordSchema>) => {
-    console.log(values);
+    const { success, message } = await changePassword(values);
+
+    if (success) {
+      toast.success("Success", { description: message });
+    } else {
+      toast.error("Error", { description: message });
+    }
   };
 
   return (

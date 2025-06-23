@@ -48,4 +48,14 @@ export const ERROR_REDIRECTS: Record<string, TErrorRedirectData> = {
     primaryButtonText: "Back To Home",
     primaryButtonHref: "/",
   },
+  userFetchError: {
+    type: "userFetchError",
+    title: "User Data Error",
+    mainMessage: "Failed to fetch user data.",
+    secondaryMessage: "Try again or contact support for assistance.",
+    primaryButtonText: "Try Again",
+    primaryButtonHref: "/account",
+    secondaryButtonText: "Back to Home",
+    secondaryButtonHref: "/",
+  },
 };
