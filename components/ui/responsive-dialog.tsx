@@ -21,23 +21,14 @@ import {
 } from "@/components/ui/drawer";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-export type ResponsiveDialogProps =
-  | {
-      children: React.ReactNode;
-      title: string;
-      description?: string;
-      trigger: React.ReactNode;
-      open?: boolean;
-      onOpenChange?: (isOpen: boolean) => void;
-    }
-  | {
-      children: React.ReactNode;
-      title: string;
-      description?: string;
-      trigger?: never;
-      open: boolean;
-      onOpenChange: (isOpen: boolean) => void;
-    };
+export type ResponsiveDialogProps = {
+  children: React.ReactNode;
+  title: string;
+  description?: string;
+  trigger?: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (isOpen: boolean) => void;
+};
 
 export function ResponsiveDialog({
   children,

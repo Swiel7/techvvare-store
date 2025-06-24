@@ -24,29 +24,17 @@ import {
 } from "@/components/ui/drawer";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-export type ResponsiveAlertDialogProps =
-  | {
-      children?: React.ReactNode;
-      title: string;
-      description: string;
-      trigger: React.ReactNode;
-      open?: boolean;
-      onOpenChange?: (isOpen: boolean) => void;
-      onConfirm: () => void | Promise<void>;
-      confirmLabel?: string;
-      cancelLabel?: string;
-    }
-  | {
-      children?: React.ReactNode;
-      title: string;
-      description: string;
-      trigger?: never;
-      open: boolean;
-      onOpenChange: (isOpen: boolean) => void;
-      onConfirm: () => void | Promise<void>;
-      confirmLabel?: string;
-      cancelLabel?: string;
-    };
+export type ResponsiveAlertDialogProps = {
+  children?: React.ReactNode;
+  title: string;
+  description: string;
+  trigger?: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (isOpen: boolean) => void;
+  onConfirm: () => void | Promise<void>;
+  confirmLabel?: string;
+  cancelLabel?: string;
+};
 
 export function ResponsiveAlertDialog({
   children,
