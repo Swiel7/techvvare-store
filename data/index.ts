@@ -1,4 +1,4 @@
-import { TIcon } from "@/types";
+import { TIcon, TOrder } from "@/types";
 import {
   CreditCard,
   Headphones,
@@ -12,6 +12,8 @@ import { StaticImageData } from "next/image";
 import { headphones, laptop, smartwatch } from "@/public/hero";
 import { banner1, banner2 } from "@/public/banners";
 import bestDealImage from "@/public/best-deal.png";
+import { VariantProps } from "class-variance-authority";
+import { badgeVariants } from "@/components/ui/badge";
 
 export const navLinks: { label: string; href: string }[] = [
   { label: "Home", href: "/" },
@@ -142,3 +144,12 @@ export const sortOptions = [
 ] as const;
 
 export const sortValues = sortOptions.map(({ value }) => value);
+
+export const orderStatusColors: Record<
+  TOrder["status"],
+  VariantProps<typeof badgeVariants>["variant"]
+> = {
+  pending: "yellow",
+  delivered: "success",
+  refunded: "blue",
+};

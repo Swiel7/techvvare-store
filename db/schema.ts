@@ -14,11 +14,11 @@ import {
 } from "drizzle-orm/pg-core";
 import { z } from "zod";
 
-export const USER_ROLE = pgEnum("role", ["CUSTOMER", "ADMIN"]);
+export const USER_ROLE = pgEnum("role", ["customer", "admin"]);
 export const ORDER_STATUS = pgEnum("order_status", [
-  "Pending",
-  "Delivered",
-  "Refunded",
+  "pending",
+  "delivered",
+  "refunded",
 ]);
 
 export const users = pgTable("users", {
@@ -27,7 +27,7 @@ export const users = pgTable("users", {
   lastName: text("last_name").notNull(),
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
-  role: USER_ROLE("role").default("CUSTOMER").notNull(),
+  role: USER_ROLE("role").default("customer").notNull(),
   addresses: jsonb("addresses").$type<TShippingAddress[]>(),
   wishlist: text("wishlist").array(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -124,7 +124,7 @@ export const orders = pgTable("orders", {
   shippingAddress:
     jsonb("shipping_address").$type<z.infer<typeof shippingAddressSchema>>(),
   paymentMethod: text("payment_method"),
-  status: ORDER_STATUS("status").default("Pending").notNull(),
+  status: ORDER_STATUS("status").default("pending").notNull(),
   itemsPrice: integer("items_price").notNull(),
   shippingPrice: integer("shipping_price").notNull(),
   totalPrice: integer("total_price").notNull(),
