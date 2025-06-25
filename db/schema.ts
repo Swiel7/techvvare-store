@@ -1,3 +1,4 @@
+import { shippingAddressSchema } from "@/lib/validations";
 import { TCartItem, TShippingAddress } from "@/types";
 import { relations } from "drizzle-orm";
 import {
@@ -11,6 +12,7 @@ import {
   boolean,
   numeric,
 } from "drizzle-orm/pg-core";
+import { z } from "zod";
 
 export const USER_ROLE = pgEnum("role", ["CUSTOMER", "ADMIN"]);
 export const ORDER_STATUS = pgEnum("order_status", [
@@ -119,7 +121,8 @@ export const orders = pgTable("orders", {
     .references(() => users.id, { onDelete: "set null" })
     .notNull(),
   items: jsonb("items").$type<TCartItem[]>().notNull(),
-  shippingAddress: jsonb("shipping_address").$type<TShippingAddress>(),
+  shippingAddress:
+    jsonb("shipping_address").$type<z.infer<typeof shippingAddressSchema>>(),
   paymentMethod: text("payment_method"),
   status: ORDER_STATUS("status").default("Pending").notNull(),
   itemsPrice: integer("items_price").notNull(),

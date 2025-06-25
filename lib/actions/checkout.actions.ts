@@ -1,6 +1,6 @@
 "use server";
 
-import { TActionResult, TShippingAddress } from "@/types";
+import { TActionResult } from "@/types";
 import Stripe from "stripe";
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
@@ -9,6 +9,8 @@ import { createShippingAddress } from "@/lib/actions/user.actions";
 import { handleErrorResponse } from "@/lib/utils";
 import { products } from "@/db/schema";
 import { updateOrder } from "@/lib/actions/order.actions";
+import { z } from "zod";
+import { shippingAddressSchema } from "@/lib/validations";
 
 export const fulfillCheckout = async (
   stripeSessionId: string,
@@ -23,7 +25,7 @@ export const fulfillCheckout = async (
       .type;
     const shippingDetails = session.collected_information?.shipping_details;
 
-    const shippingAddress: TShippingAddress = {
+    const shippingAddress: z.infer<typeof shippingAddressSchema> = {
       name: shippingDetails?.name || "",
       address: {
         city: shippingDetails?.address.city || "",

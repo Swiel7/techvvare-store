@@ -23,6 +23,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { TActionResult } from "@/types";
 
 export type ResponsiveAlertDialogProps = {
   children?: React.ReactNode;
@@ -31,7 +32,7 @@ export type ResponsiveAlertDialogProps = {
   trigger?: React.ReactNode;
   open?: boolean;
   onOpenChange?: (isOpen: boolean) => void;
-  onConfirm: () => void | Promise<void>;
+  onConfirm: () => void | Promise<void> | Promise<TActionResult>;
   confirmLabel?: string;
   cancelLabel?: string;
 };

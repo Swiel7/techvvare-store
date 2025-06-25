@@ -55,7 +55,17 @@ export const ERROR_REDIRECTS: Record<string, TErrorRedirectData> = {
     secondaryMessage: "Try again or contact support for assistance.",
     primaryButtonText: "Try Again",
     primaryButtonHref: "/account",
-    secondaryButtonText: "Back to Home",
+    secondaryButtonText: "Back To Home",
+    secondaryButtonHref: "/",
+  },
+  checkoutSessionError: {
+    type: "checkoutSessionError",
+    title: "Payment Session Error",
+    mainMessage: "Failed to create payment session.",
+    secondaryMessage: "Try again or return to the home page.",
+    primaryButtonText: "Try Again",
+    primaryButtonHref: "/checkout",
+    secondaryButtonText: "Back To Home",
     secondaryButtonHref: "/",
   },
 };

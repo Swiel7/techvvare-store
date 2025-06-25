@@ -88,7 +88,9 @@ export type TAvailableFilters = {
   status: TFilterOption[];
 };
 
-export type TShippingAddress = z.infer<typeof shippingAddressSchema>;
+export type TShippingAddress = z.infer<typeof shippingAddressSchema> & {
+  id: string;
+};
 
 export type TPaginationData<T> = {
   items: T[];

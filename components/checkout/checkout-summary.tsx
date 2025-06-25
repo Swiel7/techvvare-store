@@ -11,17 +11,17 @@ const CheckoutSummary = () => {
 
   return (
     <Card>
-      <ul className="w-full">
-        {cart.items.map((item) => (
-          <li key={`${item.productId}-${item.variant.id}`}>
-            <OrderItem
-              item={item}
-              className="border-none *:last:flex-nowrap not-sm:*:last:flex-col sm:*:last:*:last:text-right"
-            />
-          </li>
-        ))}
-      </ul>
       <CardContent>
+        <ul className="mb-6 space-y-4">
+          {cart.items.map((item) => (
+            <li key={`${item.productId}-${item.variant.id}`}>
+              <OrderItem
+                item={item}
+                className="border-none p-0 *:last:flex-nowrap not-sm:*:last:flex-col sm:*:last:*:last:text-right"
+              />
+            </li>
+          ))}
+        </ul>
         <CartPrices {...cart} />
       </CardContent>
       <CardFooter>

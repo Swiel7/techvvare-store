@@ -95,7 +95,7 @@ const RegisterForm = ({ intercept = false, onSuccess }: RegisterFormProps) => {
                         disabled={isSubmitting}
                       />
                     </FormControl>
-                    <FormLabel className="text-foreground text-base">
+                    <FormLabel className="text-foreground data-[error=true]:*:text-destructive text-base">
                       I Agree The{" "}
                       <AuthLink href="#">Terms & Conditions</AuthLink>
                     </FormLabel>

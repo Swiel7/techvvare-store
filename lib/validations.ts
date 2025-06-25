@@ -32,7 +32,6 @@ export const reviewSchema = z.object({
 });
 
 export const shippingAddressSchema = z.object({
-  id: z.string().uuid("Invalid address ID.").optional(),
   name: z.string().min(1, "Full name is required.").max(150),
   address: z.object({
     line1: z.string().min(1, "Address line 1 is required.").max(255),

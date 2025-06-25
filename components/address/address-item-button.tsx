@@ -1,6 +1,6 @@
 "use client";
 
-import AddressDialog from "@/components/address/address-dialog";
+import { AddressForm } from "@/components/form";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,6 +8,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ResponsiveAlertDialog } from "@/components/ui/responsive-alert-dialog";
+import { ResponsiveDialog } from "@/components/ui/responsive-dialog";
+import { deleteShippingAddress } from "@/lib/actions/user.actions";
 import { TShippingAddress } from "@/types";
 import { Edit, EllipsisVertical, Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -42,19 +44,24 @@ const AddressItemButton = ({
         </DropdownMenuContent>
       </DropdownMenu>
       {isEditOpen && (
-        <AddressDialog
+        <ResponsiveDialog
           open={isEditOpen}
           onOpenChange={setIsEditOpen}
-          address={addressData}
-          userId={userId}
-          mode="edit"
-        />
+          title="Edit Address"
+        >
+          <AddressForm
+            onOpenChange={setIsEditOpen}
+            addressData={addressData}
+            userId={userId}
+            mode="edit"
+          />
+        </ResponsiveDialog>
       )}
       {isDeleteOpen && (
         <ResponsiveAlertDialog
           open={isDeleteOpen}
           onOpenChange={setIsDeleteOpen}
-          onConfirm={() => console.log("deleteShippingAddress")}
+          onConfirm={deleteShippingAddress.bind(null, addressData.id!, userId)}
           title="Are you absolutely sure?"
           description="This action cannot be undone. This will permanently delete your shipping address from our database."
         />

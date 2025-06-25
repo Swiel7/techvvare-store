@@ -82,9 +82,94 @@ export const createShippingAddress = async (
       .where(eq(users.id, existingUser.id));
 
     revalidatePath("/addresses");
+
     return { success: true, message: "Shipping address added successfully!" };
   } catch (error) {
     return handleErrorResponse(error, "Failed to add shipping address!");
+  }
+};
+
+export const deleteShippingAddress = async (
+  addressId: string,
+  userId: string,
+): Promise<TActionResult> => {
+  try {
+    await authenticateUser();
+
+    const user = await getUserById(userId);
+    if (!user) return { success: false, message: "User not found!" };
+
+    const currentAddresses: TShippingAddress[] = user.addresses || [];
+
+    const addressExists = currentAddresses.some((a) => a.id === addressId);
+
+    if (!addressExists)
+      return { success: false, message: "Shipping address not found!" };
+
+    const newAddresses = currentAddresses.filter((a) => a.id !== addressId);
+
+    await db
+      .update(users)
+      .set({ addresses: newAddresses })
+      .where(eq(users.id, user.id));
+
+    revalidatePath("/addresses");
+
+    return { success: true, message: "Shipping address deleted successfully!" };
+  } catch (error) {
+    return handleErrorResponse(error, "Failed to delete shipping address!");
+  }
+};
+
+export const updateShippingAddress = async (
+  values: z.infer<typeof shippingAddressSchema>,
+  addressId: string,
+  userId: string,
+): Promise<TActionResult> => {
+  try {
+    await authenticateUser();
+
+    const validationResult = shippingAddressSchema.safeParse(values);
+
+    if (!validationResult.success) {
+      return { success: false, message: "Invalid shipping address data!" };
+    }
+
+    const newAddress = validationResult.data;
+
+    const user = await getUserById(userId);
+
+    if (!user?.addresses)
+      return { success: false, message: "No addresses found for this user!" };
+
+    const existingAddress = user.addresses.find(
+      (addr) => addr.id === addressId,
+    );
+
+    if (!existingAddress)
+      return { success: false, message: "Shipping address not found!" };
+
+    if (checkShippingAddressesEqual(newAddress, existingAddress)) {
+      return {
+        success: false,
+        message: "This shipping address already exists!",
+      };
+    }
+
+    const newAddresses = user.addresses.map((a) =>
+      a.id === addressId ? { ...existingAddress, ...newAddress } : a,
+    );
+
+    await db
+      .update(users)
+      .set({ addresses: newAddresses })
+      .where(eq(users.id, user.id));
+
+    revalidatePath("/addresses");
+
+    return { success: true, message: "Shipping address updated successfully!" };
+  } catch (error) {
+    return handleErrorResponse(error, "Failed to update shipping address!");
   }
 };
 

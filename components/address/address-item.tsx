@@ -16,7 +16,7 @@ const AddressItem = ({
     <Card className="min-w-1/3 !py-3 not-last:flex-1">
       <CardContent className="flex items-center gap-4 !px-3">
         <address className="grow space-y-1 text-sm font-medium not-italic">
-          <h3>{name}</h3>
+          <h3 className="text-base font-bold">{name}</h3>
           <p>
             {line1}, {line2}
           </p>
