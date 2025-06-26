@@ -6,7 +6,7 @@ import {
   generateUniqueId,
   getTotalCount,
 } from "@/lib/utils";
-import { TOrder, TPaginationData } from "@/types";
+import { TOrder, TOrderWithUserInfo, TPaginationData } from "@/types";
 import { ORDERS_PER_PAGE } from "@/lib/constants";
 
 export const generateOrderId = async (): Promise<string> => {
@@ -48,4 +48,17 @@ export const getMyOrders = async (
 
   const totalPages = Math.ceil(totalItems / limit);
   return { items, totalItems, totalPages, currentPage };
+};
+
+export const getOrderById = async (
+  orderId: string,
+): Promise<TOrderWithUserInfo | null> => {
+  const order = await db.query.orders.findFirst({
+    where: eq(orders.id, orderId),
+    with: {
+      user: { columns: { email: true, firstName: true, lastName: true } },
+    },
+  });
+
+  return order || null;
 };

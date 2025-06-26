@@ -1,6 +1,5 @@
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,6 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import UserAvatar from "@/components/ui/user-avatar";
 import { profileLinks } from "@/data";
 import { logout } from "@/lib/actions/auth.actions";
 import { protectedRoutes } from "@/lib/routes";
@@ -36,29 +36,16 @@ const UserButton = ({ session }: { session: Session | null }) => {
     );
   }
 
-  const { email, firstName, lastName } = session.user;
-
-  const userAvatar = (
-    <Avatar>
-      <AvatarFallback className="bg-primary text-primary-foreground text-sm">
-        {firstName[0]}
-        {lastName[0]}
-      </AvatarFallback>
-    </Avatar>
-  );
+  const user = { ...session.user, email: session.user.email as string };
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="ml-2">{userAvatar}</DropdownMenuTrigger>
+      <DropdownMenuTrigger className="ml-2">
+        <UserAvatar user={user} className="*:first:**:text-sm *:last:hidden" />
+      </DropdownMenuTrigger>
       <DropdownMenuContent className="min-w-56" align="end">
         <DropdownMenuItem className="py-2">
-          {userAvatar}
-          <div className="ml-1 flex flex-col">
-            <span className="text-sm font-medium">
-              {firstName} {lastName}
-            </span>
-            <span className="text-muted-foreground text-xs">{email}</span>
-          </div>
+          <UserAvatar user={user} />
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         {profileLinks.map((link) => (

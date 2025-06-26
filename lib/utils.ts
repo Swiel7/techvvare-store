@@ -3,6 +3,7 @@ import { SLIDER_MAX_PRICE } from "@/lib/constants";
 import {
   TActionResult,
   TFilterSearchParams,
+  TOrder,
   TShippingAddress,
   TSortValue,
   TValidatedFilterSearchParams,
@@ -192,6 +193,21 @@ export const getSortOption = (sort: string): SQL => {
     latest: sql`createdAt DESC`,
   };
   return SORT_OPTIONS[sort] || SORT_OPTIONS.default;
+};
+
+export const validateOrderStatus = (
+  status: string | undefined,
+): TOrder["status"] | "all" => {
+  const validStatuses: (TOrder["status"] | "all")[] = [
+    "all",
+    "pending",
+    "delivered",
+    "refunded",
+  ];
+
+  return status && validStatuses.includes(status as TOrder["status"] | "all")
+    ? (status as TOrder["status"] | "all")
+    : "all";
 };
 
 export const getTotalCount = async (

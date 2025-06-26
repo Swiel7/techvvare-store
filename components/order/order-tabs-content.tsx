@@ -11,15 +11,17 @@ import { getMyOrders } from "@/lib/services/order.service";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { cache } from "react";
-import { TOrder } from "@/types";
 import Empty from "@/components/ui/empty";
+import { TOrder } from "@/types";
 
 const OrderTabsContent = async ({
-  status,
-  page,
+  value,
+  status = "all",
+  page = "1",
 }: {
+  value: string;
   status: TOrder["status"] | "all";
-  page: string;
+  page?: string;
 }) => {
   const session = await auth();
   const userId = session?.user?.id;
@@ -31,14 +33,14 @@ const OrderTabsContent = async ({
   )();
 
   return (
-    <TabsContent value={status}>
+    <TabsContent value={value}>
       {orders.length > 0 ? (
         <div className="space-y-6">
           <ul className="space-y-6">
             {orders.map(({ id, createdAt, status, items, totalPrice }) => (
               <li key={id}>
                 <Card>
-                  <div className="flex flex-wrap items-center gap-x-5 gap-y-3 border-b p-4 !pt-0 lg:p-6">
+                  <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-b p-4 !pt-0 lg:p-6">
                     <span className="font-bold">Order: {id}</span>
                     <span className="text-sm">{formatDate(createdAt)}</span>
                     <Badge

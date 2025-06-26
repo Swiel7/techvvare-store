@@ -16,8 +16,8 @@ const OrderItem = ({
       <StyledImage
         src={image}
         alt={name}
-        wrapperClassName="size-20 shrink-0 rounded-lg border"
-        sizes="80px"
+        wrapperClassName="size-16 shrink-0 rounded-lg border"
+        sizes="64px"
       />
       <div className="flex grow flex-wrap justify-between gap-x-5 gap-y-1">
         <div className="flex flex-col justify-center gap-y-1">

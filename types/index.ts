@@ -40,6 +40,10 @@ export type TAuthenticatedUser = Omit<
 
 export type TReviewWithAuthor = TReview & Pick<TUser, "firstName" | "lastName">;
 
+export type TOrderWithUserInfo = TOrder & {
+  user: Pick<TUser, "email" | "firstName" | "lastName">;
+};
+
 export type TRatingCounts = Record<5 | 4 | 3 | 2 | 1, number>;
 
 export type TActionResult<T = null> =
