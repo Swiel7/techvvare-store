@@ -1,49 +1,19 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
-import { Color } from "@/components/ui/color";
-import { QuantityButton } from "@/components/ui/quantity-button";
 import { Rating } from "@/components/ui/rating";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { TProduct } from "@/types";
 import { ExternalLink, Package, Repeat, Truck } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import ProductPrices from "@/components/product/product-prices";
-import AddToCartButton from "@/components/product/add-to-cart-button";
 import WishlistButton from "@/components/product/wishlist-button";
-import { useCart } from "@/hooks/use-cart";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { cache } from "react";
+import { checkProductOnWishlist } from "@/lib/services/product.service";
+import ProductDetailsActions from "@/components/product/product-details-actions";
 
-const ProductDetails = ({
-  product,
-  isOnWishlist,
-}: {
-  product: TProduct;
-  isOnWishlist: boolean;
-}) => {
-  const { addItem } = useCart();
-  const router = useRouter();
-
-  const {
-    name,
-    discountPrice,
-    regularPrice,
-    numReviews,
-    rating,
-    variants,
-    onSale,
-  } = product;
-
-  const [selectedVariant, setSelectedVariant] = useState<
-    TProduct["variants"][0] | null
-  >(() => variants.find((v) => v.stock > 0) || null);
-
-  const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
-
-  const outOfStock = selectedVariant === null;
+const ProductDetails = async ({ product }: { product: TProduct }) => {
+  const { name, discountPrice, regularPrice, numReviews, rating, onSale } =
+    product;
+  const isOnWishlist = await cache(() => checkProductOnWishlist(product.id))();
 
   return (
     <div className="space-y-8">
@@ -67,76 +37,7 @@ const ProductDetails = ({
           )}
         </div>
       </div>
-      <div className="space-y-2">
-        <div className="text-muted-foreground flex gap-1.5 text-sm font-medium">
-          Color:
-          <span className="text-foreground">
-            {selectedVariant?.colorName || "Out Of Stock"}
-          </span>
-        </div>
-        <ToggleGroup
-          type="single"
-          variant="outline"
-          className="flex-wrap gap-4 !shadow-none"
-          value={JSON.stringify(selectedVariant)}
-          disabled={outOfStock}
-          onValueChange={(value) => {
-            if (value) setSelectedVariant(JSON.parse(value));
-          }}
-        >
-          {variants.map((v) => (
-            <ToggleGroupItem
-              asChild
-              key={v.id}
-              value={JSON.stringify(v)}
-              disabled={v.stock < 1}
-              size="lg"
-              className="!bg-background data-[state=on]:border-primary flex-none rounded-lg !border"
-            >
-              <Color item={v} />
-            </ToggleGroupItem>
-          ))}
-        </ToggleGroup>
-      </div>
-      {!outOfStock ? (
-        <div className="flex flex-wrap gap-4">
-          <QuantityButton
-            key={selectedVariant?.id}
-            size="lg"
-            stockAmount={selectedVariant?.stock}
-            quantity={selectedQuantity}
-            onQuantityChange={setSelectedQuantity}
-          />
-          <AddToCartButton
-            size="lg"
-            variant="secondary"
-            className="grow"
-            product={product}
-            productVariant={selectedVariant}
-            quantity={selectedQuantity}
-          />
-          <Button
-            size="lg"
-            className="w-full"
-            onClick={() => {
-              if (!selectedVariant) {
-                toast.error(
-                  "Please select a product variant before purchasing.",
-                );
-                return;
-              }
-              addItem(product, selectedVariant, selectedQuantity);
-              router.push("/checkout");
-            }}
-          >
-            Buy Now
-          </Button>
-        </div>
-      ) : (
-        <Button size="lg" className="w-full" disabled>
-          Out Of Stock
-        </Button>
-      )}
+      <ProductDetailsActions product={product} />
       <ul className="flex flex-wrap gap-x-4 gap-y-1">
         <li>
           <WishlistButton

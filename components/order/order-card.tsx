@@ -12,7 +12,7 @@ import Link from "next/link";
 
 const OrderCardHeader = ({ orderId }: { orderId: string }) => {
   return (
-    <div className="mb-4 flex flex-wrap items-center justify-between gap-x-5">
+    <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
       <CardTitle>Order: {orderId}</CardTitle>
       <Button variant="outline" asChild>
         <Link href="/orders" className="flex items-center gap-2">
@@ -33,7 +33,7 @@ const OrderCardInfo = ({ order }: { order: TOrder }) => {
         <CardTitle className="text-lg lg:text-xl">Order Information</CardTitle>
       </CardHeader>
       <CardContent>
-        <ul className="grid gap-5 sm:grid-flow-col">
+        <ul className="grid gap-4 sm:grid-flow-col">
           <OrderCardInfoItem title="Date">
             <span>{formatDate(createdAt)}</span>
           </OrderCardInfoItem>
@@ -74,7 +74,7 @@ const OrderCardInfoItem = ({
   );
 };
 
-const OrderCardItems = ({ items }: { items: TOrder["items"] }) => {
+const OrderCardItems = ({ order }: { order: TOrder }) => {
   return (
     <Card className="!gap-4">
       <CardHeader>
@@ -82,8 +82,8 @@ const OrderCardItems = ({ items }: { items: TOrder["items"] }) => {
       </CardHeader>
       <CardContent>
         <ul className="flex flex-col gap-4">
-          {items.map((item) => (
-            <li key={`${item.name} ${item.color}`}>
+          {order.items.map((item) => (
+            <li key={`${order.id}${item.name} ${item.color}`}>
               <OrderItem item={item} />
             </li>
           ))}

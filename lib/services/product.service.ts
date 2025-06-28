@@ -18,6 +18,8 @@ import {
   SQL,
 } from "drizzle-orm";
 import { calculatePagination, getSortOption, getTotalCount } from "@/lib/utils";
+import { auth } from "@/auth";
+import { getUserById } from "@/lib/services/user.service";
 
 export const getCategoriesWithImages = async (): Promise<
   TCategoryWithImage[]
@@ -112,4 +114,18 @@ export const checkUserBoughtProduct = async (
   );
 
   return isUserBoughtProduct;
+};
+
+export const checkProductOnWishlist = async (
+  productId: string,
+): Promise<boolean> => {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) return false;
+
+  const user = await getUserById(userId);
+  if (!user) return false;
+
+  const wishlistItems = user.wishlist || [];
+  return wishlistItems.includes(productId);
 };

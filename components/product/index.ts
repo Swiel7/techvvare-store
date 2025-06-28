@@ -9,5 +9,6 @@ export { default as MobileFilters } from "./mobile-filters";
 export { default as FilterTags } from "./filter-tags";
 export { default as ProductImages } from "./product-images";
 export { default as ProductDetails } from "./product-details";
+export { default as ProductDetailsActions } from "./product-details-actions";
 export { default as ProductTabs } from "./product-tabs";
 export { default as ProductReviews } from "./product-reviews";

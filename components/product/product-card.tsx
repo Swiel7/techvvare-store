@@ -8,15 +8,17 @@ import WishlistButton from "@/components/product/wishlist-button";
 import ProductPrices from "@/components/product/product-prices";
 import AddToCartButton from "@/components/product/add-to-cart-button";
 import StyledImage from "@/components/ui/styled-image";
+import { cache } from "react";
+import { checkProductOnWishlist } from "@/lib/services/product.service";
 
-const ProductCard = ({
+const ProductCard = async ({
   product,
   variant = "vertical",
 }: {
   product: TProduct;
   variant?: "vertical" | "horizontal";
 }) => {
-  const isOnWishlist: boolean = false;
+  const isOnWishlist = await cache(() => checkProductOnWishlist(product.id))();
 
   return (
     <Card

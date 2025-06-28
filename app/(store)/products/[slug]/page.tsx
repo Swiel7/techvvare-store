@@ -38,9 +38,6 @@ const ProductDetailsPage = async (props: {
     { label: product.name },
   ];
 
-  // TODO:
-  const isOnWishlist = false;
-
   return (
     <>
       <SectionBreadcrumb items={breadcrumbItems} />
@@ -49,7 +46,7 @@ const ProductDetailsPage = async (props: {
           <div className="space-y-8 lg:space-y-16">
             <div className="grid gap-8 lg:grid-cols-2 lg:gap-16">
               <ProductImages product={product} />
-              <ProductDetails product={product} isOnWishlist={isOnWishlist} />
+              <ProductDetails product={product} />
             </div>
             <ProductTabs product={product} page={page} />
           </div>

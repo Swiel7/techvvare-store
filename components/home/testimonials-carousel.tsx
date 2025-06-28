@@ -1,6 +1,5 @@
 "use client";
 
-import ReviewCard from "@/components/review/review-card";
 import {
   Carousel,
   CarouselContent,
@@ -10,14 +9,9 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import { useRef } from "react";
-import { TReviewWithAuthor } from "@/types";
+import { ReactNode, useRef } from "react";
 
-const TestimonialsCarousel = ({
-  testimonials,
-}: {
-  testimonials: TReviewWithAuthor[];
-}) => {
+export const TestimonialsCarousel = ({ children }: { children: ReactNode }) => {
   const autoplay = useRef(Autoplay({ delay: 5000, stopOnInteraction: true }));
 
   return (
@@ -34,19 +28,11 @@ const TestimonialsCarousel = ({
           <CarouselNext className="static" />
         </div>
       </div>
-      <CarouselContent>
-        {testimonials.map((review: TReviewWithAuthor) => (
-          <CarouselItem
-            key={review.id}
-            className="grid sm:basis-1/2 lg:basis-1/3"
-          >
-            <ReviewCard review={review} className="group" />
-          </CarouselItem>
-        ))}
-      </CarouselContent>
+      {children}
       <CarouselDots />
     </Carousel>
   );
 };
 
-export default TestimonialsCarousel;
+export const TestimonialsCarouselContent = CarouselContent;
+export const TestimonialsCarouselItem = CarouselItem;

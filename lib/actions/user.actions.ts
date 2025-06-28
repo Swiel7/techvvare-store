@@ -236,7 +236,7 @@ export const updateProfile = async (
 
 export const changePassword = async (
   values: z.infer<typeof changePasswordSchema>,
-): Promise<TActionResult<null>> => {
+): Promise<TActionResult> => {
   try {
     const user = await authenticateUser();
 
@@ -272,5 +272,68 @@ export const changePassword = async (
     return { success: true, message: "Password changed successfully!" };
   } catch (error) {
     return handleErrorResponse(error, "Failed to change user password!");
+  }
+};
+
+export const addToWishlist = async (
+  productId: string,
+): Promise<TActionResult> => {
+  try {
+    const user = await authenticateUser();
+
+    const existingUser = await getUserById(user.id);
+    if (!existingUser) return { success: false, message: "User not found!" };
+
+    const currentWishlist = existingUser.wishlist || [];
+
+    if (currentWishlist.includes(productId)) {
+      return { success: false, message: "Product already in wishlist!" };
+    }
+
+    const newWishlist = [...currentWishlist, productId];
+
+    await db
+      .update(users)
+      .set({ wishlist: newWishlist })
+      .where(eq(users.id, existingUser.id));
+
+    revalidatePath("/");
+    revalidatePath("/products");
+
+    return { success: true, message: "Added to wishlist!" };
+  } catch (error) {
+    return handleErrorResponse(error, "Failed to add to wishlist!");
+  }
+};
+
+export const removeFromWishlist = async (
+  productId: string,
+): Promise<TActionResult> => {
+  try {
+    const user = await authenticateUser();
+
+    const existingUser = await getUserById(user.id);
+    if (!existingUser) return { success: false, message: "User not found!" };
+
+    const currentWishlist = existingUser.wishlist || [];
+
+    if (!currentWishlist.includes(productId)) {
+      return { success: false, message: "Product not in wishlist!" };
+    }
+
+    const newWishlist = currentWishlist.filter((id) => id !== productId);
+
+    await db
+      .update(users)
+      .set({ wishlist: newWishlist })
+      .where(eq(users.id, existingUser.id));
+
+    revalidatePath("/wishlist");
+    revalidatePath("/");
+    revalidatePath("/products");
+
+    return { success: true, message: "Removed from wishlist!" };
+  } catch (error) {
+    return handleErrorResponse(error, "Failed to remove from wishlist!");
   }
 };

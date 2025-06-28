@@ -36,7 +36,7 @@ const OrderDetailsPage = async (props: { params: Promise<{ id: string }> }) => {
           <div className="flex gap-6 not-lg:flex-col">
             <div className="flex grow flex-col gap-6">
               <OrderCardInfo order={order} />
-              <OrderCardItems items={order.items} />
+              <OrderCardItems order={order} />
               <OrderCardPayment order={order} />
             </div>
             <div className="w-full lg:max-w-80">
