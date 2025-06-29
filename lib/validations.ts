@@ -61,3 +61,10 @@ export const updateProfileSchema = z.object({
   lastName: z.string().min(3, "Last name must be at least 3 characters"),
   email: z.string().email().min(3, "Email must be at least 3 characters"),
 });
+
+export const contactSchema = z.object({
+  fullName: z.string().min(3, "Full name must be at least 3 characters"),
+  email: z.string().email().min(3, "Email must be at least 3 characters"),
+  subject: z.string().min(1, "Subject is required"),
+  message: z.string().min(1, "Message is required"),
+});

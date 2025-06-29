@@ -5,3 +5,4 @@ export { default as Logo } from "./logo";
 export { default as Menu } from "./menu";
 export { default as UserButton } from "./user-button";
 export { default as Features } from "./features";
+export { default as SocialLinks } from "./social-links";

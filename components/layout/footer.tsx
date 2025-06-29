@@ -1,7 +1,7 @@
 import Logo from "@/components/layout/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { footerLinks } from "@/data";
+import { footerLinks, contactData } from "@/data";
 import Link from "next/link";
 import * as payments from "@/public/payments";
 import Image from "next/image";
@@ -13,20 +13,14 @@ const Footer = () => {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1.5fr]">
           <div className="flex flex-col gap-4">
             <Logo />
-            <div className="space-y-3">
-              <p>
-                <span className="font-medium">Address: </span>
-                18757 Larkin Rest, Berlin, Germany
-              </p>
-              <p>
-                <span className="font-medium">Phone: </span>
-                +123 456 7890
-              </p>
-              <p>
-                <span className="font-medium">Email: </span>
-                techvvare@gmail.com
-              </p>
-            </div>
+            <ul className="space-y-3">
+              {Object.values(contactData).map(({ label, value }) => (
+                <li key={label}>
+                  <span className="font-medium">{label}: </span>
+                  {value}
+                </li>
+              ))}
+            </ul>
           </div>
           {footerLinks.map(({ title, links }) => (
             <div key={title}>

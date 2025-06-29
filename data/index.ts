@@ -153,3 +153,9 @@ export const orderStatusColors: Record<
   delivered: "success",
   refunded: "blue",
 };
+
+export const contactData: Record<string, { value: string; label: string }> = {
+  address: { value: "18757 Larkin Rest, Berlin, Germany", label: "Address" },
+  phone: { value: "+123 456 7890", label: "Phone" },
+  email: { value: "techvvare@gmail.com", label: "Email" },
+};

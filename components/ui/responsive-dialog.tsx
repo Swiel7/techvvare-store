@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,15 +10,14 @@ import {
 } from "@/components/ui/dialog";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export type ResponsiveDialogProps = {
   children: React.ReactNode;
@@ -50,14 +48,16 @@ export function ResponsiveDialog({
     return (
       <Dialog open={isOpen} onOpenChange={handleChange}>
         {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-        <DialogContent>
-          <DialogHeader>
+        <DialogContent className="gap-0 p-0">
+          <DialogHeader className="p-6 pb-0">
             <DialogTitle>{title}</DialogTitle>
             {description && (
               <DialogDescription>{description}</DialogDescription>
             )}
           </DialogHeader>
-          {children}
+          <ScrollArea className="*:data-[slot='scroll-area-viewport']:p-6">
+            {children}
+          </ScrollArea>
         </DialogContent>
       </Dialog>
     );
@@ -67,16 +67,13 @@ export function ResponsiveDialog({
     <Drawer open={isOpen} onOpenChange={handleChange}>
       {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
       <DrawerContent>
-        <DrawerHeader className="text-left">
+        <DrawerHeader className="pb-0 text-left">
           <DrawerTitle>{title}</DrawerTitle>
           {description && <DrawerDescription>{description}</DrawerDescription>}
         </DrawerHeader>
-        {children}
-        <DrawerFooter className="pt-2">
-          <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DrawerClose>
-        </DrawerFooter>
+        <ScrollArea className="overflow-y-auto *:data-[slot='scroll-area-viewport']:p-4">
+          {children}
+        </ScrollArea>
       </DrawerContent>
     </Drawer>
   );

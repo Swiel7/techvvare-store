@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/drawer";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { TActionResult } from "@/types";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export type ResponsiveAlertDialogProps = {
   children?: React.ReactNode;
@@ -68,13 +69,15 @@ export function ResponsiveAlertDialog({
     return (
       <AlertDialog open={isOpen} onOpenChange={handleChange}>
         {trigger && <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>}
-        <AlertDialogContent>
-          <AlertDialogHeader>
+        <AlertDialogContent className="gap-0 p-0">
+          <AlertDialogHeader className="p-6 pb-0">
             <AlertDialogTitle>{title}</AlertDialogTitle>
             <AlertDialogDescription>{description}</AlertDialogDescription>
           </AlertDialogHeader>
-          {children}
-          <AlertDialogFooter>
+          <ScrollArea className="*:data-[slot='scroll-area-viewport']:p-6">
+            {children}
+          </ScrollArea>
+          <AlertDialogFooter className="p-6 pt-0">
             <AlertDialogCancel>{cancelLabel}</AlertDialogCancel>
             <AlertDialogAction onClick={handleConfirm} asChild>
               <Button loading={isPending}>{confirmLabel}</Button>
@@ -89,12 +92,14 @@ export function ResponsiveAlertDialog({
     <Drawer open={isOpen} onOpenChange={handleChange}>
       {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
       <DrawerContent>
-        <DrawerHeader className="text-left">
+        <DrawerHeader className="pb-0 text-left">
           <DrawerTitle>{title}</DrawerTitle>
           <DrawerDescription>{description}</DrawerDescription>
         </DrawerHeader>
-        {children}
-        <DrawerFooter className="pt-2">
+        <ScrollArea className="overflow-y-auto *:data-[slot='scroll-area-viewport']:p-4">
+          {children}
+        </ScrollArea>
+        <DrawerFooter className="pt-0">
           <DrawerClose asChild>
             <Button variant="outline">{cancelLabel}</Button>
           </DrawerClose>
